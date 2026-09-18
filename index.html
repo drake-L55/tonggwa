@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>통과 — 무역 영어 훈련</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#E6EDF0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1820" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="통과">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E6EDF0; --sheet:#F8FAFB; --ink:#12283A; --ink2:#4C6272; --line:#B4C4CD;
+  --cobalt:#1F4FD8; --cobalt-soft:#DDE6FB; --on-cobalt:#FFFFFF;
+  --clear:#157A55; --clear-soft:#DCEFE7; --hold:#C4273B; --hold-soft:#F8DEE1; --flag:#E8B520;
+  --ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --en:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1820; --sheet:#14232E; --ink:#E3ECF1; --ink2:#9AB0BE; --line:#2B4151;
+    --cobalt:#7C9DFF; --cobalt-soft:#1C2E55; --on-cobalt:#0B1524;
+    --clear:#4CC79A; --clear-soft:#143A2E; --hold:#FF7486; --hold-soft:#47202A; --flag:#E8B520;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1820; --sheet:#14232E; --ink:#E3ECF1; --ink2:#9AB0BE; --line:#2B4151;
+  --cobalt:#7C9DFF; --cobalt-soft:#1C2E55; --on-cobalt:#0B1524;
+  --clear:#4CC79A; --clear-soft:#143A2E; --hold:#FF7486; --hold-soft:#47202A; --flag:#E8B520;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55;
+  padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom));-webkit-tap-highlight-color:transparent}
+body.in-session{padding-bottom:24px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+
+/* top */
+.top{display:flex;align-items:baseline;justify-content:space-between;padding:18px 0 10px}
+.brand{font-weight:700;font-size:22px;letter-spacing:-.02em}
+.brand small{font-weight:500;font-size:13px;color:var(--ink2);margin-left:8px;letter-spacing:0}
+.streak{font-size:13px;color:var(--ink2)}
+.streak b{color:var(--ink);font-weight:700}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.03em;margin:14px 0 4px;font-weight:700}
+h2{font-size:17px;margin:26px 0 10px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0 0 18px;font-size:15px}
+
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:4px}
+
+/* home mode rows */
+.modes{display:grid}
+.mode{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:14px 14px;border-top:1px solid var(--line);align-items:center}
+.mode:first-child{border-top:0}
+.mode .nm{font-weight:700;font-size:17px}
+.mode .ds{grid-column:1;color:var(--ink2);font-size:13.5px}
+.mode .ct{grid-column:1;font-size:13.5px;margin-top:4px;display:flex;gap:14px}
+.mode .ct span b{font-weight:700}
+.mode .ct .due b{color:var(--cobalt)}
+.mode .go{grid-column:2;grid-row:1 / span 3}
+.note{font-size:13px;color:var(--ink2);margin:8px 2px 0}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--sheet);border-radius:4px;padding:11px 16px;font-weight:600;font-size:15px;min-height:44px}
+.btn.pri{background:var(--cobalt);border-color:var(--cobalt);color:var(--on-cobalt)}
+.btn.sm{padding:6px 12px;min-height:36px;font-size:14px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.danger{color:var(--hold);border-color:var(--hold)}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions .btn{flex:1}
+.actions .btn.pri{flex:1.6}
+
+/* activity */
+.bars{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:64px;padding:12px 14px 0}
+.bars i{display:block;background:var(--cobalt);border-radius:2px 2px 0 0;min-height:2px;opacity:.9}
+.bars i.zero{background:var(--line)}
+.barlab{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);padding:4px 14px 10px}
+
+/* session */
+.sbar{display:flex;align-items:center;gap:12px;padding:14px 0}
+.sbar .x{border:0;background:none;padding:8px 4px;font-size:14px;color:var(--ink2);font-weight:600}
+.prog{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--cobalt);transition:width .25s}
+.sbar .n{font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.card{position:relative;padding:18px 16px 18px;overflow:hidden}
+.lab{display:block;font-size:12px;color:var(--ink2);font-weight:600;margin-bottom:2px}
+.mean{font-size:19px;font-weight:700;margin:0 0 14px}
+.mean .pos{font-style:normal;font-weight:500;font-size:13px;color:var(--ink2);margin-left:6px}
+.en{font-family:var(--en);font-size:22px;line-height:1.65;margin:0 0 12px;letter-spacing:-.005em}
+.tr{color:var(--ink2);margin:0;font-size:15px}
+.tr.big{color:var(--ink);font-size:18px;font-weight:600;margin-bottom:12px}
+.blank{font-family:var(--en);font-size:21px;border:0;border-bottom:2px solid var(--cobalt);background:var(--cobalt-soft);
+  border-radius:3px 3px 0 0;padding:1px 6px;max-width:100%;text-align:center}
+.blank:focus{outline:none;box-shadow:0 2px 0 0 var(--cobalt)}
+mark{background:var(--clear-soft);color:inherit;border-bottom:2px solid var(--clear);padding:0 3px;border-radius:2px 2px 0 0}
+.card.bad mark{background:var(--hold-soft);border-color:var(--hold)}
+.hint{font-family:var(--en);font-size:18px;letter-spacing:.18em;color:var(--ink2);margin:12px 0 0}
+.yours{font-size:14px;color:var(--ink2);margin:10px 0 0}
+.yours s{color:var(--hold)}
+.fb{font-size:14px;margin:10px 0 0;font-weight:600}
+.fb.ok{color:var(--clear)} .fb.no{color:var(--hold)}
+.stamp{position:absolute;right:14px;top:12px;transform:rotate(-9deg);border:3px double currentColor;border-radius:4px;
+  padding:2px 12px;font-weight:700;font-size:20px;letter-spacing:.2em;text-indent:.2em;color:var(--clear);opacity:.92;animation:stamp .18s ease-out both;pointer-events:none}
+.card.bad .stamp{color:var(--hold)}
+.card.soso .stamp{color:var(--flag)}
+@keyframes stamp{from{transform:rotate(-9deg) scale(1.7);opacity:0}to{transform:rotate(-9deg) scale(1);opacity:.92}}
+@media (prefers-reduced-motion: reduce){.stamp{animation:none}.prog i{transition:none}}
+.playrow{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.built{min-height:56px;border-bottom:2px solid var(--line);padding:6px 0 8px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.bank{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--en);font-size:18px;border:1px solid var(--line);background:var(--sheet);border-radius:4px;padding:6px 10px;min-height:40px}
+.bank .chip.used{visibility:hidden}
+.built .chip{background:var(--cobalt-soft);border-color:var(--cobalt)}
+.opts{display:grid;gap:8px;margin-top:14px}
+.opt{text-align:left;font-family:var(--en);font-size:19px;padding:12px 14px;border:1px solid var(--line);background:var(--sheet);border-radius:4px;min-height:48px}
+.opt.right{border-color:var(--clear);background:var(--clear-soft)}
+.opt.wrong{border-color:var(--hold);background:var(--hold-soft)}
+.explain{margin:14px 0 0;font-size:15px}
+.explain b{display:inline-block;font-size:12.5px;border:1px solid var(--line);border-radius:3px;padding:0 6px;margin-right:6px;font-weight:600;color:var(--ink2)}
+.heard{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);font-size:15px}
+.heard .w{font-family:var(--en);font-size:19px;line-height:1.6}
+.en .hit{color:var(--clear)} .en .miss{color:var(--hold);text-decoration:underline wavy;text-underline-offset:4px}
+.score{font-weight:700;font-size:22px}
+.listening{display:inline-flex;align-items:center;gap:8px;color:var(--hold);font-weight:600}
+.listening::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--hold);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.masked{filter:blur(7px);user-select:none}
+
+/* result */
+.res{padding:20px 16px}
+.res .big{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.missed{margin:14px 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.missed li{padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.missed li span{font-family:var(--en);font-size:18px;font-weight:600;margin-right:8px}
+
+/* library */
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:6px 0 14px;background:var(--sheet)}
+.seg button{border:0;background:none;padding:10px 4px;font-weight:600;font-size:14.5px;border-left:1px solid var(--line);min-height:44px}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.pad{padding:16px}
+.topics{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.tp{border:1px solid var(--line);background:var(--sheet);border-radius:999px;padding:6px 12px;font-size:14px;min-height:36px}
+.tp[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:var(--on-cobalt)}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin:12px 0 4px}
+.inp,textarea.inp,select.inp{width:100%;border:1px solid var(--line);background:var(--sheet);border-radius:4px;padding:10px 12px;min-height:44px}
+textarea.inp{min-height:110px;resize:vertical;font-family:var(--en);font-size:17px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.status{font-size:14px;margin:12px 0 0;color:var(--ink2)}
+.status.err{color:var(--hold)}
+.plist{list-style:none;margin:0;padding:0}
+.plist li{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:12px 14px;border-top:1px solid var(--line);align-items:start}
+.plist li:first-child{border-top:0}
+.plist input[type=checkbox]{width:20px;height:20px;margin-top:5px;accent-color:var(--cobalt)}
+.plist .w{font-family:var(--en);font-size:18px;font-weight:600}
+.plist .m{font-size:14px;color:var(--ink2);margin-left:6px}
+.plist .s{font-family:var(--en);font-size:15.5px;grid-column:2}
+.plist .t{font-size:13.5px;color:var(--ink2);grid-column:2}
+.wl{list-style:none;margin:0;padding:0}
+.wl li{display:grid;grid-template-columns:1fr auto;gap:0 10px;padding:10px 14px;border-top:1px solid var(--line);align-items:center}
+.wl li:first-child{border-top:0}
+.wl .w{font-family:var(--en);font-size:17px;font-weight:600}
+.wl .m{font-size:13.5px;color:var(--ink2)}
+.stg{display:inline-flex;gap:2px;vertical-align:middle}
+.stg i{width:5px;height:12px;border-radius:1px;background:var(--line)}
+.stg i.on{background:var(--clear)}
+.del{border:0;background:none;color:var(--hold);font-size:13px;font-weight:600;padding:6px}
+details.manual{margin-top:16px;border-top:1px solid var(--line);padding-top:10px}
+details.manual summary{font-weight:600;cursor:pointer;padding:6px 0}
+
+/* stats */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr)}
+.kpi{padding:14px;border-left:1px solid var(--line)}
+.kpi:first-child{border-left:0}
+.kpi .v{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.kpi .k{font-size:12.5px;color:var(--ink2)}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.tbl th,.tbl td{padding:10px 14px;border-top:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl thead th{border-top:0;font-size:12.5px;color:var(--ink2);font-weight:600}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.setrow:first-child{border-top:0}
+.setrow select{width:auto;min-width:110px}
+
+/* levels */
+.lvl{padding:14px}
+.lvrow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.lv{border:1px solid var(--line);background:var(--sheet);border-radius:4px;min-height:44px;font-weight:700;font-size:17px}
+.lv[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--sheet)}
+.lv:disabled{opacity:.4;cursor:default;border-style:dashed}
+.lvinfo b{display:block;font-size:17px}
+.lvinfo span{display:block;font-size:13.5px;color:var(--ink2);margin-bottom:10px}
+.lvl .note{margin:8px 0 0}
+.lvl .actions{margin-top:10px}
+.lvlist{list-style:none;margin:0;padding:0}
+.lvlist li{padding:12px 14px;border-top:1px solid var(--line)}
+.lvlist li:first-child{border-top:0}
+.lvlist b{display:block;font-size:16px}
+.lvlist span{font-size:13.5px;color:var(--ink2)}
+.word{font-family:var(--en);font-size:32px;font-weight:600;line-height:1.2;margin:2px 0 4px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.detail{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);font-size:15px}
+.detail p{margin:0 0 12px}
+.detail p:last-child{margin-bottom:0}
+.detail .kw{font-family:var(--en);font-size:18px;margin-right:6px}
+.co{list-style:none;margin:0 0 12px;padding:0}
+.co li{padding:3px 0;color:var(--ink2);font-size:14.5px}
+.co li span{font-family:var(--en);font-size:17px;color:var(--ink);margin-right:8px}
+.tw{text-decoration:underline;text-decoration-color:var(--cobalt);text-decoration-thickness:2px;text-underline-offset:5px}
+.opt.ko{font-family:var(--ui);font-size:16px}
+.res.bad .big{color:var(--hold)}
+.wl li{display:block}
+.wl summary{cursor:pointer;list-style:none}
+.wl summary::-webkit-details-marker{display:none}
+.wl .ld{padding:10px 0 4px}
+.en.sm{font-size:18px;margin-bottom:6px}
+
+/* nav */
+#nav{position:fixed;left:0;right:0;bottom:0;background:var(--sheet);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+#nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+#nav button{border:0;background:none;padding:14px 4px 12px;font-weight:600;font-size:14.5px;color:var(--ink2);border-top:3px solid transparent;margin-top:-1px;min-height:52px}
+#nav button[aria-current="page"]{color:var(--ink);border-top-color:var(--cobalt)}
+body.in-session #nav{display:none}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--sheet);
+  padding:10px 16px;border-radius:4px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;z-index:9}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"></div></div>
+<nav id="nav" aria-label="주 메뉴"><div class="in">
+  <button data-nav="home">오늘</button>
+  <button data-nav="lib">단어장</button>
+  <button data-nav="stats">기록</button>
+</div></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ───────────── 기본 콘텐츠 ───────────── */
+function parseCo(t){return t?String(t).split('|').map(x=>x.split('=')).filter(x=>x.length===2):[]}
+/* [표현, 품사, 뜻, 예문({정답}), 해석, 분야, 단계, 설명, 자주 쓰는 조합(en=ko|…), 비교] — v1~v60의 순서는 기존 학습 기록과 연결되므로 바꾸지 않습니다 */
+const V = [
+["quotation","n","견적(서)","Could you send us a {quotation} for the new formula by Friday?","금요일까지 새 포뮬러에 대한 견적서를 보내주실 수 있나요?","견적·발주",2,"가격·수량·조건을 적어 공식적으로 제시하는 문서입니다. 일상 메일에서는 줄여서 quote라고도 많이 씁니다.","request a quotation=견적을 요청하다|revised quotation=수정 견적","estimate는 대략적인 추정가, quotation은 그대로 주문할 수 있는 제시가에 가깝습니다."],
+["lead time","phr","리드타임, 납기 소요 기간","What is your usual {lead time} for an order of this size?","이 정도 규모 주문의 통상 리드타임은 어떻게 되나요?","견적·발주",3,"주문 시점부터 출고(또는 도착)까지 걸리는 기간입니다. 생산 리드타임과 운송 리드타임을 나눠서 묻는 것이 좋습니다.","production lead time=생산 소요 기간|shorten the lead time=리드타임을 줄이다","delivery date는 특정 날짜, lead time은 기간입니다."],
+["in stock","phr","재고가 있는","Is this item currently {in stock}, or is it made to order?","이 품목은 지금 재고가 있나요, 아니면 주문 생산인가요?","견적·발주",2,"바로 출고할 수 있는 재고가 있다는 뜻입니다. 반대말은 out of stock(품절)입니다.","items in stock=재고 보유 품목|back in stock=재입고된",""],
+["purchase order","phr","발주서","We will issue a {purchase order} once the price is confirmed.","가격이 확정되면 발주서를 발행하겠습니다.","견적·발주",3,"구매자가 품목·수량·가격·납기를 확정해 보내는 공식 주문 문서입니다. 실무에서는 거의 항상 약어 PO로 씁니다.","issue a PO=발주서를 발행하다|PO number=발주 번호","proforma invoice는 반대로 판매자가 보내는 견적 성격의 송장입니다."],
+["specification","n","사양, 규격","Please check the attached {specification} before you start production.","생산을 시작하기 전에 첨부한 사양서를 확인해 주세요.","견적·발주",3,"제품이 충족해야 하는 규격과 기준을 적은 문서입니다. 줄여서 spec, 복수형 specifications로 자주 씁니다.","meet the specification=규격을 충족하다|product specification sheet=제품 규격서","out of spec은 '규격 이탈'이라는 뜻입니다."],
+["place","v","(주문을) 넣다","We would like to {place} a trial order next month.","다음 달에 시험 주문을 넣고 싶습니다.","견적·발주",2,"'주문하다'는 동사 order 하나로도 되지만, 비즈니스 메일에서는 place an order가 가장 자연스럽습니다.","place an order=주문을 넣다|place a repeat order=재주문하다",""],
+["availability","n","공급 가능 여부","Please confirm the {availability} of the raw material for March.","3월분 원료의 공급 가능 여부를 확인해 주세요.","견적·발주",3,"원하는 시점에 물량을 공급받을 수 있는지를 뜻합니다. 사람의 일정이 되는지를 물을 때도 같은 단어를 씁니다.","check availability=가능 여부를 확인하다|subject to availability=재고 상황에 따라",""],
+["forecast","n","수요 예측","We will share our annual {forecast} so you can plan production.","생산 계획을 세우실 수 있도록 연간 수요 예측을 공유하겠습니다.","견적·발주",3,"앞으로의 예상 주문량입니다. 공급사가 원료를 미리 확보하도록 매월 갱신하는 rolling forecast를 주는 경우가 많습니다.","sales forecast=판매 예측|rolling forecast=연동 예측","forecast는 약속이 아닌 예상치, commitment는 확정 물량입니다."],
+["negotiate","v","협상하다","We would like to {negotiate} the unit price for larger volumes.","물량이 늘어나는 만큼 단가를 협상하고 싶습니다.","가격 협상",2,"조건을 주고받으며 합의점을 찾는 것입니다. 명사는 negotiation, '협상 가능한'은 negotiable입니다.","negotiate a price=가격을 협상하다|negotiate with a supplier=공급사와 협상하다",""],
+["discount","n","할인","Can you offer a {discount} if we double the order?","주문량을 두 배로 늘리면 할인을 해주실 수 있나요?","가격 협상",1,"정가에서 깎아 주는 금액이나 비율입니다. 수량이 많을 때 받는 할인은 volume discount라고 합니다.","volume discount=물량 할인|a five percent discount=5퍼센트 할인",""],
+["competitive","adj","경쟁력 있는","Your price is not {competitive} compared with other suppliers.","귀사 가격은 다른 공급사와 비교해 경쟁력이 없습니다.","가격 협상",3,"경쟁사와 비교해 뒤지지 않는다는 뜻입니다. '비싸다'를 직접 말하지 않고 돌려 말할 때 유용합니다.","competitive price=경쟁력 있는 가격|stay competitive=경쟁력을 유지하다",""],
+["margin","n","마진, 이윤 폭","At this price, our {margin} would be too thin.","이 가격이면 저희 마진이 너무 얇아집니다.","가격 협상",3,"판매가에서 원가를 뺀 이윤의 폭입니다. 가격 인하를 요구하거나 거절하는 근거로 자주 등장합니다.","profit margin=이익률|thin margin=얇은 마진","markup은 원가에 얹는 비율, margin은 판매가 대비 이익 비율입니다."],
+["counteroffer","n","역제안","Thank you for the offer; here is our {counteroffer}.","제안 감사합니다. 저희 역제안은 다음과 같습니다.","가격 협상",4,"상대의 제안을 그대로 받지 않고 조건을 바꿔 다시 제시하는 것입니다. 법적으로는 원래 제안을 거절한 것으로 봅니다.","make a counteroffer=역제안하다|accept the counteroffer=역제안을 수락하다",""],
+["firm","adj","확정된 (가격·오퍼)","Is this price {firm}, or is there room to move?","이 가격은 확정인가요, 아니면 조정 여지가 있나요?","가격 협상",4,"형용사로 '변동 없는, 확정된'이라는 뜻입니다. firm offer는 유효기간 동안 철회할 수 없는 확정 오퍼입니다.","firm offer=확정 오퍼|firm order=확정 주문","명사 firm은 '회사'라는 전혀 다른 뜻입니다."],
+["surcharge","n","할증료, 추가 요금","The carrier added a fuel {surcharge} this month.","운송사가 이번 달에 유류 할증료를 추가했습니다.","가격 협상",4,"기본 요금 위에 덧붙는 추가 요금입니다. 해상 운임에는 유류, 성수기 등 여러 할증료가 붙습니다.","fuel surcharge=유류 할증료|peak season surcharge=성수기 할증료",""],
+["breakdown","n","내역, 명세","Could you give us a cost {breakdown} for each item?","품목별 원가 내역을 주실 수 있나요?","가격 협상",3,"총액을 항목별로 쪼갠 내역입니다. 가격 협상 전에 원료비·가공비·포장비를 나눠 달라고 할 때 씁니다.","cost breakdown=원가 내역|price breakdown=가격 내역","기계의 '고장'이라는 뜻도 있습니다."],
+["shipment","n","선적(물), 출하","The {shipment} is scheduled to leave Vancouver next Monday.","선적물은 다음 주 월요일에 밴쿠버를 출발할 예정입니다.","선적·물류",2,"보내는 화물 자체 또는 보내는 행위입니다. 한 번에 보내는 단위로 셀 수 있어 two shipments처럼 씁니다.","partial shipment=분할 선적|shipment date=선적일","shipping은 배송 업무 전반, shipment는 개별 화물입니다."],
+["freight","n","운임, 화물","Does the price include ocean {freight} to Busan?","가격에 부산까지의 해상 운임이 포함되어 있나요?","선적·물류",2,"화물 또는 화물 운송비를 뜻합니다. 해상은 ocean freight, 항공은 air freight로 구분합니다.","ocean freight=해상 운임|freight cost=운송비",""],
+["forwarder","n","포워더, 운송주선인","Our {forwarder} will contact you to arrange the pickup.","저희 포워더가 픽업 일정을 잡기 위해 연락드릴 겁니다.","선적·물류",3,"화주 대신 선박·항공 예약, 서류, 통관을 주선하는 업체입니다. 정식 명칭은 freight forwarder입니다.","freight forwarder=운송주선인|nominate a forwarder=포워더를 지정하다",""],
+["delay","n","지연","We apologize for the {delay} caused by port congestion.","항만 혼잡으로 인한 지연에 대해 사과드립니다.","선적·물류",1,"예정보다 늦어지는 것입니다. 명사와 동사가 같은 형태이고, 수동태 be delayed로도 많이 씁니다.","a two-week delay=2주 지연|without delay=지체 없이",""],
+["dispatch","v","발송하다","We will {dispatch} the goods as soon as payment is received.","대금이 입금되는 대로 물품을 발송하겠습니다.","선적·물류",2,"물품을 목적지로 내보낸다는 뜻입니다. send보다 격식 있고 물류 문서에 자주 나옵니다. 미국에서는 ship을 더 많이 씁니다.","dispatch the goods=물품을 발송하다|dispatch date=발송일",""],
+["tracking number","phr","운송장 번호","Please share the {tracking number} once the parcel ships.","소포가 출고되면 운송장 번호를 알려주세요.","선적·물류",2,"특송 화물의 위치를 조회하는 번호입니다. 샘플을 DHL이나 FedEx로 보낼 때 항상 주고받습니다.","track the parcel=소포를 추적하다|courier=특송 업체",""],
+["consolidate","v","합치다, 혼재하다","Can we {consolidate} both orders into one container?","두 주문을 컨테이너 하나로 합칠 수 있을까요?","선적·물류",4,"여러 건을 하나로 합친다는 뜻입니다. 물류에서는 소량 화물을 모아 한 컨테이너에 싣는 혼재(LCL)를 말합니다.","consolidate shipments=선적을 합치다|consolidated cargo=혼재 화물",""],
+["pallet","n","팔레트","Each {pallet} holds forty cartons.","팔레트 하나에 카톤 40개가 실립니다.","선적·물류",2,"지게차로 옮길 수 있게 화물을 쌓는 받침대입니다. 적재 수량은 cartons per pallet로 표현합니다.","cartons per pallet=팔레트당 카톤 수|wooden pallet=목재 팔레트",""],
+["customs clearance","phr","통관","{Customs clearance} usually takes three to five business days.","통관은 보통 영업일 기준 3~5일 걸립니다.","통관·서류",3,"수출입 물품이 세관 심사를 통과하는 절차입니다. 동사로는 clear customs라고 합니다.","clear customs=통관하다|customs broker=관세사",""],
+["bill of lading","phr","선하증권 (B/L)","Please email a copy of the {bill of lading} today.","오늘 중으로 선하증권 사본을 이메일로 보내주세요.","통관·서류",3,"선사가 화물을 받았다는 증거이자 화물의 권리증권입니다. B/L로 줄여 쓰며, 항공 화물은 air waybill(AWB)입니다.","original B/L=원본 선하증권|surrender B/L=서렌더 B/L",""],
+["commercial invoice","phr","상업송장","The value on the {commercial invoice} must match the payment.","상업송장의 금액은 결제 금액과 일치해야 합니다.","통관·서류",3,"거래 금액·품목·조건을 적은 송장으로, 세관이 과세 가격을 판단하는 기준 서류입니다.","packing list=포장명세서|invoice value=송장 금액","proforma invoice는 거래 전 견적용, commercial invoice는 실제 거래용입니다."],
+["certificate","n","증명서","We need a {certificate} of analysis for every batch.","모든 배치마다 시험성적서가 필요합니다.","통관·서류",2,"어떤 사실을 공식적으로 증명하는 문서입니다. 원료 거래에서는 시험성적서(COA)와 원산지증명서(CO)가 대표적입니다.","certificate of analysis=시험성적서 (COA)|certificate of origin=원산지증명서",""],
+["consignee","n","수하인","Please list our company as the {consignee} on the documents.","서류에 저희 회사를 수하인으로 기재해 주세요.","통관·서류",4,"운송 서류에서 화물을 받는 사람입니다. 보내는 사람은 shipper 또는 consignor라고 합니다.","shipper=송하인|notify party=착화통지처",""],
+["tariff","n","관세(율)","The {tariff} on this product category is eight percent.","이 품목군의 관세율은 8퍼센트입니다.","통관·서류",3,"수입품에 매기는 세금 또는 세율표입니다. FTA가 적용되면 특혜 관세(preferential tariff)를 받습니다.","tariff rate=관세율|preferential tariff=특혜 관세","duty도 관세를 뜻하며 실무에서는 거의 같은 말로 씁니다."],
+["comply","v","준수하다","All labels must {comply} with Korean food regulations.","모든 라벨은 한국 식품 규정을 준수해야 합니다.","규제·표시",3,"규정이나 기준을 따른다는 뜻으로, 반드시 전치사 with와 함께 씁니다. 명사는 compliance, 형용사는 compliant입니다.","comply with regulations=규정을 준수하다|fully compliant=완전히 준수하는",""],
+["declare","v","신고하다","You must {declare} the correct code to customs.","세관에 정확한 코드를 신고해야 합니다.","통관·서류",3,"세관에 품목과 금액을 공식적으로 알린다는 뜻입니다. 명사는 declaration이고 수입신고는 import declaration입니다.","declare the value=금액을 신고하다|import declaration=수입신고",""],
+["remittance","n","송금","We will send the {remittance} slip after the transfer.","이체 후 송금 확인증을 보내드리겠습니다.","결제",3,"돈을 보내는 것 또는 보낸 금액입니다. 동사는 remit이고, 은행 송금 확인증은 remittance slip 또는 remittance advice라고 합니다.","remittance slip=송금 확인증|bank remittance=은행 송금",""],
+["deposit","n","선금, 계약금","We require a thirty percent {deposit} before production.","생산 전에 30퍼센트 선금이 필요합니다.","결제",2,"생산 착수 전에 먼저 내는 돈입니다. '선금 30퍼센트, 잔금은 선적 전'과 같은 조건이 흔합니다.","pay a deposit=선금을 내다|refundable deposit=환불 가능한 선금","advance payment는 전액 선지급을 뜻하는 경우가 많습니다."],
+["balance","n","잔금","The {balance} is due before shipment.","잔금은 선적 전에 지급되어야 합니다.","결제",2,"선금을 내고 남은 금액입니다. '균형'이라는 뜻도 있지만 결제 문맥에서는 항상 '잔액'입니다.","balance payment=잔금 결제|outstanding balance=미결제 잔액",""],
+["overdue","adj","연체된","The March invoice is now two weeks {overdue}.","3월 인보이스가 현재 2주 연체되었습니다.","결제",3,"기한이 지났는데 아직 처리되지 않은 상태입니다. 독촉 메일의 핵심 단어입니다.","overdue invoice=연체된 인보이스|overdue payment=연체 대금","due는 '기한이 된', overdue는 '기한이 지난'입니다."],
+["letter of credit","phr","신용장 (L/C)","For the first order, we prefer payment by {letter of credit}.","첫 주문은 신용장 결제를 선호합니다.","결제",4,"서류 조건이 충족되면 은행이 대금 지급을 보증하는 결제 방식입니다. L/C로 줄여 쓰며 첫 거래나 큰 금액에 사용합니다.","open an L/C=신용장을 개설하다|L/C at sight=일람불 신용장","T/T(전신환 송금)는 은행 보증 없이 직접 보내는 방식입니다."],
+["payment terms","phr","결제 조건","Could we discuss more flexible {payment terms}?","좀 더 유연한 결제 조건을 논의할 수 있을까요?","결제",3,"언제, 어떤 방식으로 지급할지에 대한 조건입니다. net thirty는 인보이스 발행 후 30일 이내 지급을 뜻합니다.","net thirty days=30일 후 지급|extend payment terms=결제 기한을 늘리다",""],
+["wire","v","(돈을) 송금하다","We will {wire} the funds tomorrow morning.","내일 오전에 대금을 송금하겠습니다.","결제",3,"동사로 '은행 전신환으로 돈을 보내다'라는 뜻입니다. 명사 wire transfer는 전신 송금(T/T)입니다.","wire transfer=전신 송금|wire the deposit=선금을 송금하다",""],
+["exchange rate","phr","환율","The {exchange rate} has moved a lot since your last quote.","지난번 견적 이후로 환율이 많이 변했습니다.","결제",3,"두 통화의 교환 비율입니다. 환율 변동을 이유로 가격 재협의를 요청할 때 자주 등장합니다.","exchange rate fluctuation=환율 변동|fix the rate=환율을 고정하다",""],
+["defective","adj","결함이 있는","About two percent of the units were {defective}.","제품의 약 2퍼센트에 결함이 있었습니다.","클레임",3,"기능이나 외관에 결함이 있다는 뜻입니다. 명사는 defect(결함), 불량률은 defect rate입니다.","defective product=불량품|defect rate=불량률","damaged는 운송 중 파손, defective는 제조상 결함입니다."],
+["batch","n","배치, 생산 단위","Which {batch} did the damaged cartons come from?","파손된 카톤은 어느 배치에서 나온 건가요?","원료·품질",2,"한 번의 생산 공정으로 만든 묶음입니다. 품질 문제를 추적하는 기본 단위이며 lot과 거의 같은 뜻으로 씁니다.","batch number=배치 번호|batch record=제조 기록서",""],
+["shelf life","phr","유통기한 (기간)","We need at least eighteen months of {shelf life} on arrival.","입고 시점에 유통기한이 최소 18개월은 남아 있어야 합니다.","원료·품질",3,"제품이 품질을 유지하는 전체 기간입니다. 수입할 때는 도착 시점의 잔여 유통기한(remaining shelf life)이 중요합니다.","remaining shelf life=잔여 유통기한|extend the shelf life=유통기한을 늘리다","expiry date는 만료 '날짜', shelf life는 '기간'입니다."],
+["compensate","v","보상하다","How do you plan to {compensate} us for the loss?","손실에 대해 어떻게 보상하실 계획인가요?","클레임",3,"손실이나 피해를 금전 등으로 메워 준다는 뜻입니다. compensate + 사람 + for + 손실 구조로 쓰고, 명사는 compensation입니다.","compensate for the loss=손실을 보상하다|claim compensation=보상을 청구하다",""],
+["replacement","n","교체품","Please send a {replacement} by air at your cost.","귀사 부담으로 교체품을 항공편으로 보내주세요.","클레임",2,"문제 있는 물품 대신 보내는 새 물품입니다. 클레임 해결책은 보통 교체(replacement), 환불(refund), 차감(credit note) 중 하나입니다.","send a replacement=교체품을 보내다|free replacement=무상 교체",""],
+["inspect","v","검사하다","We will {inspect} the goods when they arrive at our warehouse.","물품이 저희 창고에 도착하면 검사하겠습니다.","원료·품질",2,"기준에 맞는지 꼼꼼히 살펴본다는 뜻입니다. 명사는 inspection이고, 선적 전 검사는 pre-shipment inspection입니다.","inspect the goods=물품을 검사하다|pre-shipment inspection=선적 전 검사",""],
+["claim","n","클레임, 배상 청구","We have to file a {claim} for the water damage.","침수 피해에 대해 클레임을 제기해야 합니다.","클레임",3,"손해에 대해 공식적으로 배상을 요구하는 것입니다. 한국어 '클레임'보다 법적인 느낌이 강하고, 가벼운 불만은 complaint라고 합니다.","file a claim=클레임을 제기하다|insurance claim=보험 청구","건강기능식품에서 health claim은 '기능성 표시'라는 전혀 다른 뜻입니다."],
+["root cause","phr","근본 원인","Please tell us the {root cause} and your corrective action.","근본 원인과 시정 조치를 알려주세요.","클레임",4,"겉으로 드러난 증상이 아닌 문제의 근본 원인입니다. 품질 클레임에서는 원인 분석과 시정·예방 조치를 함께 요구합니다.","root cause analysis=근본 원인 분석|corrective action=시정 조치",""],
+["exclusive","adj","독점적인","We are asking for {exclusive} distribution rights in Korea.","한국 내 독점 유통권을 요청드립니다.","계약",4,"특정 지역이나 채널에서 한 업체에만 권리를 준다는 뜻입니다. 독점권에는 보통 최소 구매 물량 조건이 따라옵니다.","exclusive distributor=독점 유통사|exclusive rights=독점권","sole distributor는 공급사 본인의 직접 판매는 허용하는 경우가 있어 계약서에서 구분합니다."],
+["terminate","v","해지하다","Either party may {terminate} the agreement with ninety days' notice.","어느 쪽이든 90일 전 통지로 계약을 해지할 수 있습니다.","계약",4,"계약을 기간 만료 전에 끝낸다는 뜻입니다. 명사는 termination이고, 만료로 자연히 끝나는 것은 expire라고 합니다.","terminate the agreement=계약을 해지하다|termination notice=해지 통지",""],
+["renew","v","갱신하다","We would like to {renew} the contract for another two years.","계약을 2년 더 갱신하고 싶습니다.","계약",2,"기간이 끝나는 계약이나 인증을 연장해 다시 유효하게 한다는 뜻입니다. 명사는 renewal입니다.","renew a contract=계약을 갱신하다|automatic renewal=자동 갱신",""],
+["clause","n","조항","Could you explain the penalty {clause} in section seven?","7조의 위약금 조항을 설명해 주실 수 있나요?","계약",4,"계약서의 개별 조항입니다. penalty clause(위약금 조항)처럼 내용을 앞에 붙여 부릅니다.","penalty clause=위약금 조항|add a clause=조항을 추가하다","article, section도 '조'를 뜻하며 문서마다 용어가 다릅니다."],
+["liability","n","법적 책임","The supplier's {liability} is limited to the invoice value.","공급자의 책임은 인보이스 금액으로 제한됩니다.","계약",4,"법적으로 져야 하는 배상 책임입니다. 제조물 책임은 product liability이고, 계약에서는 책임 한도가 핵심 쟁점입니다.","product liability=제조물 책임|limitation of liability=책임 제한","responsibility는 일반적인 책임, liability는 배상 의무가 따르는 법적 책임입니다."],
+["binding","adj","구속력 있는","This memorandum is not legally {binding}.","이 양해각서는 법적 구속력이 없습니다.","계약",4,"서명하면 법적으로 지켜야 한다는 뜻입니다. MOU나 LOI는 보통 non-binding(구속력 없음)으로 작성합니다.","legally binding=법적 구속력이 있는|non-binding=구속력 없는",""],
+["follow up","phr","후속 확인하다","I am writing to {follow up} on my email from last week.","지난주에 보낸 이메일 건으로 다시 연락드립니다.","이메일·회의",2,"앞서 한 연락이나 논의에 이어 다시 확인한다는 뜻입니다. 답이 없는 상대에게 정중히 재촉할 때 가장 많이 쓰며 전치사 on과 함께 씁니다.","follow up on=~에 대해 후속 확인하다|a follow-up email=후속 메일",""],
+["attached","adj","첨부된","Please find the signed contract {attached}.","서명된 계약서를 첨부하오니 확인 바랍니다.","이메일·회의",1,"메일에 파일을 붙였다는 뜻입니다. 'Please find attached ~' 또는 'I have attached ~'가 기본 문형입니다.","attached file=첨부 파일|as attached=첨부와 같이","우편물에 동봉했을 때는 enclosed를 씁니다."],
+["clarify","v","명확히 하다","Could you {clarify} what is included in the price?","가격에 무엇이 포함되어 있는지 명확히 해주시겠어요?","이메일·회의",2,"애매한 부분을 분명하게 해 달라고 할 때 씁니다. 못 알아들었다는 느낌 없이 정중하게 되물을 수 있습니다.","clarify a point=요점을 명확히 하다|for clarification=명확히 하기 위해",""],
+["postpone","v","연기하다","Can we {postpone} the call until Thursday?","통화를 목요일로 미룰 수 있을까요?","이메일·회의",2,"일정을 뒤로 미룬다는 뜻입니다. 구어에서는 push back도 쓰고, 앞당기는 것은 bring forward입니다.","postpone a meeting=회의를 연기하다|postpone until=~까지 미루다","cancel은 취소, postpone은 연기입니다."],
+["agenda","n","안건","I will send the {agenda} before the meeting.","회의 전에 안건을 보내드리겠습니다.","이메일·회의",1,"회의에서 다룰 항목 목록입니다. 회의 전에 미리 공유하는 것이 예의입니다.","meeting agenda=회의 안건|on the agenda=안건에 올라 있는",""],
+["get back to","phr","~에게 다시 연락하다","Let me check with my team and {get back to} you tomorrow.","팀과 확인한 뒤 내일 다시 연락드리겠습니다.","이메일·회의",2,"지금 바로 답하기 어려울 때 '확인 후 다시 연락하겠다'는 뜻으로 씁니다. 즉답을 피하면서도 성의 있게 들립니다.","get back to you by Friday=금요일까지 회신하다|get back to me=저에게 회신 주세요",""],
+/* ── 1단계 추가 ── */
+["price","n","가격","What is the {price} per bottle?","병당 가격이 얼마인가요?","견적·발주",1,"가장 기본적인 '가격'입니다. 단가는 unit price, 정가는 list price라고 합니다.","unit price=단가|price list=가격표","cost는 내가 들이는 비용, price는 상대가 부르는 값입니다."],
+["order","n","주문","We sent the {order} by email this morning.","오늘 아침 이메일로 주문을 보냈습니다.","견적·발주",1,"명사(주문)와 동사(주문하다)가 같은 형태입니다.","order quantity=주문 수량|confirm an order=주문을 확정하다",""],
+["sample","n","샘플, 견본","Could you send us a free {sample}?","무료 샘플을 보내주실 수 있나요?","견적·발주",1,"거래 전에 품질을 확인하려고 받는 견본입니다. 원료는 보통 시험성적서와 함께 요청합니다.","request a sample=샘플을 요청하다|sample cost=샘플 비용",""],
+["confirm","v","확인하다, 확정하다","Please {confirm} the delivery date.","납기일을 확정해 주세요.","이메일·회의",1,"사실이 맞는지 확인하거나 일정을 확정한다는 뜻입니다. 명사는 confirmation입니다.","confirm the order=주문을 확정하다|order confirmation=주문 확인서","check는 살펴보다, confirm은 맞다고 확정하다입니다."],
+["deliver","v","배송하다, 납품하다","We can {deliver} the goods next week.","다음 주에 물품을 납품할 수 있습니다.","선적·물류",1,"물건을 약속한 곳에 가져다준다는 뜻입니다. 명사는 delivery입니다.","deliver on time=제때 납품하다|delivery date=납품일",""],
+["payment","n","결제, 지급","We received your {payment} yesterday.","어제 귀사의 결제 대금을 받았습니다.","결제",1,"돈을 내는 행위 또는 그 금액입니다. 동사는 pay입니다.","make a payment=결제하다|advance payment=선지급",""],
+["product","n","제품","This {product} is popular in Europe.","이 제품은 유럽에서 인기가 있습니다.","제품 개발",1,"판매를 위해 만든 물건입니다. 제품군은 product line, 완제품은 finished product라고 합니다.","finished product=완제품|product launch=제품 출시",""],
+["label","n","라벨, 표시","Please send us the {label} design.","라벨 디자인을 보내주세요.","규제·표시",1,"용기에 붙는 표시입니다. 수입 건강기능식품은 한글 표시사항을 따로 붙여야 해서 자주 논의됩니다. 동사로는 '라벨을 붙이다'입니다.","label design=라벨 디자인|Korean label=한글 표시사항",""],
+["ingredient","n","성분, 원재료","What is the main {ingredient} of this product?","이 제품의 주원료는 무엇인가요?","원료·품질",1,"제품에 들어가는 각각의 성분입니다. 라벨의 '원재료명'이 ingredients입니다.","main ingredient=주원료|ingredient list=원재료 목록","raw material은 가공 전 원자재, ingredient는 배합에 들어가는 성분입니다."],
+["capsule","n","캡슐","Take one {capsule} a day with water.","하루 한 캡슐을 물과 함께 드세요.","제품 개발",1,"가루나 오일을 담는 제형입니다. 딱딱한 것은 hard capsule, 오일용 말랑한 것은 softgel입니다.","hard capsule=경질 캡슐|softgel=연질 캡슐",""],
+["tablet","n","정제, 알약","This {tablet} is easy to swallow.","이 정제는 삼키기 쉽습니다.","제품 개발",1,"가루를 압축해 만든 알약입니다. 씹어 먹는 것은 chewable tablet입니다.","chewable tablet=츄어블 정제|coated tablet=코팅정","pill은 알약 전반을 가리키는 일상어입니다."],
+["supplier","n","공급사","We are looking for a new {supplier}.","새로운 공급사를 찾고 있습니다.","견적·발주",1,"원료나 제품을 공급하는 업체입니다. vendor도 같은 뜻으로 씁니다.","raw material supplier=원료 공급사|approved supplier=승인된 공급사",""],
+["schedule","n","일정","The production {schedule} is attached.","생산 일정을 첨부합니다.","이메일·회의",1,"계획된 일정표입니다. 동사로는 '일정을 잡다'이고, 일정보다 빠르면 ahead of schedule, 늦으면 behind schedule입니다.","production schedule=생산 일정|on schedule=일정대로",""],
+["receive","v","받다","Did you {receive} our email yesterday?","어제 저희 이메일 받으셨나요?","이메일·회의",1,"get보다 격식 있는 '받다'입니다. 명사 receipt는 '수령' 또는 '영수증'입니다.","receive an order=주문을 받다|upon receipt=수령 즉시",""],
+["available","adj","구할 수 있는, 시간이 되는","Are you {available} for a call tomorrow?","내일 통화 가능하신가요?","이메일·회의",1,"물건이 있다는 뜻과 사람이 시간이 된다는 뜻을 모두 이 단어 하나로 표현합니다.","available in stock=재고로 구할 수 있는|not available=불가한",""],
+["reply","n","답장","Thank you for your quick {reply}.","빠른 답장 감사합니다.","이메일·회의",1,"메일에 대한 회신입니다. 동사로도 쓰며 reply to + 대상 형태입니다.","quick reply=빠른 답장|reply to an email=이메일에 답하다","answer는 질문에 대한 답, reply는 연락에 대한 회신입니다."],
+/* ── 2단계 추가 ── */
+["dosage","n","섭취량, 용량","The recommended {dosage} is two tablets a day.","권장 섭취량은 하루 두 정입니다.","제품 개발",2,"한 번 또는 하루에 먹는 양입니다. 식품에서는 serving size라는 말도 씁니다.","recommended dosage=권장 섭취량|daily dosage=일일 섭취량","dose는 1회분의 양, dosage는 양과 횟수를 포함한 섭취 방법 전체입니다."],
+["flavor","n","맛, 향","Which {flavor} sells best in your market?","귀사 시장에서는 어떤 맛이 가장 잘 팔리나요?","제품 개발",2,"분말·젤리·츄어블 제품 개발의 핵심 요소입니다. 향료 자체도 flavor라고 하며, 영국식 철자는 flavour입니다.","natural flavor=천연 향료|flavor options=맛 선택지",""],
+["packaging","n","포장, 포장재","We want to change the {packaging} to a smaller bottle.","포장을 더 작은 병으로 바꾸고 싶습니다.","제품 개발",2,"병·박스·파우치 등 제품을 담는 포장 전체를 가리키는 셀 수 없는 명사입니다.","packaging design=포장 디자인|packaging material=포장재","packing은 운송을 위해 상자에 담는 작업입니다."],
+["expiry date","phr","유통기한 만료일","The {expiry date} is printed on the bottom of the bottle.","유통기한은 병 바닥에 인쇄되어 있습니다.","규제·표시",2,"제품을 사용할 수 있는 마지막 날짜입니다. 미국에서는 expiration date라고 합니다.","best before date=품질유지기한|manufacturing date=제조일",""],
+/* ── 3단계 추가 ── */
+["formulation","n","배합, 처방","We would like to adjust the {formulation} for the Korean market.","한국 시장에 맞게 배합을 조정하고 싶습니다.","제품 개발",3,"어떤 성분을 얼마나 넣을지 정한 배합 설계입니다. 동사는 formulate, 맞춤 배합은 custom formulation입니다.","custom formulation=맞춤 배합|adjust the formulation=배합을 조정하다","formula는 배합비 자체, formulation은 배합 설계와 그 결과물입니다."],
+["raw material","phr","원료","The price of this {raw material} went up last quarter.","이 원료의 가격이 지난 분기에 올랐습니다.","원료·품질",3,"가공 전의 원자재입니다. 건강기능식품에서는 기능성 원료와 부원료를 모두 포함합니다.","raw material cost=원료비|source raw materials=원료를 소싱하다",""],
+["active ingredient","phr","기능 성분, 유효 성분","The {active ingredient} must be at least ninety percent pure.","기능 성분은 순도가 최소 90퍼센트여야 합니다.","원료·품질",3,"제품의 효과를 내는 핵심 성분입니다. 나머지 부형제 등은 other ingredients로 표시합니다.","active ingredient content=기능 성분 함량|per serving=1회 섭취량당",""],
+["stability","n","안정성","We need {stability} data to set the shelf life.","유통기한을 설정하려면 안정성 데이터가 필요합니다.","원료·품질",3,"시간이 지나도 함량과 성상이 유지되는 성질입니다. 유통기한 설정의 근거가 되며, 가속 시험은 accelerated stability test입니다.","stability test=안정성 시험|accelerated stability=가속 안정성",""],
+["dosage form","phr","제형","Which {dosage form} do you recommend, capsules or powder?","캡슐과 분말 중 어떤 제형을 추천하시나요?","제품 개발",3,"정제·캡슐·분말·액상·젤리 등 제품의 형태입니다. delivery format이라고도 합니다.","solid dosage form=고형 제형|stick pack=스틱 포장",""],
+["private label","phr","자체 브랜드 (PB) 제조","Do you offer {private label} manufacturing for small brands?","소규모 브랜드를 위한 자체 상표 제조를 제공하나요?","제품 개발",3,"제조사의 기성 제품에 구매자 브랜드를 붙여 판매하는 방식입니다. white label도 비슷한 뜻입니다.","private label product=PB 제품|contract manufacturing=위탁 제조",""],
+/* ── 4단계 추가 ── */
+["bioavailability","n","생체이용률","This form of magnesium has higher {bioavailability}.","이 형태의 마그네슘은 생체이용률이 더 높습니다.","원료·품질",4,"섭취한 성분이 실제로 흡수되어 이용되는 비율입니다. 원료의 차별점을 설명하는 대표적인 용어입니다.","enhanced bioavailability=향상된 생체이용률|absorption rate=흡수율",""],
+["clinical trial","phr","임상시험, 인체적용시험","The ingredient is supported by a {clinical trial} in healthy adults.","이 원료는 건강한 성인 대상 임상시험으로 뒷받침됩니다.","규제·표시",4,"사람을 대상으로 효과와 안전성을 검증하는 시험입니다. 개별인정형 원료 신청의 핵심 근거 자료이며 clinical study도 같은 뜻입니다.","human clinical trial=인체적용시험|randomized controlled trial=무작위 대조 시험",""],
+["health claim","phr","기능성 표시","Which {health claim} is allowed for this ingredient in Korea?","한국에서 이 원료에 허용되는 기능성 표시는 무엇인가요?","규제·표시",4,"제품이 건강에 어떤 도움을 주는지 표시·광고하는 문구입니다. 나라마다 허용 범위가 달라 수입 전에 반드시 확인해야 합니다.","approved health claim=인정된 기능성|structure-function claim=구조·기능 표시 (미국)","여기서 claim은 '주장, 표시'입니다. 배상 청구의 claim과 구분하세요."],
+["excipient","n","부형제","Please list every {excipient} used in the tablet.","정제에 사용된 모든 부형제를 기재해 주세요.","원료·품질",4,"기능 성분은 아니지만 제형을 만들기 위해 넣는 물질(결합제, 활택제 등)입니다. 한국 기준에 맞지 않는 첨가물이 있는지 확인할 때 중요합니다.","filler=충전제|flow agent=유동화제",""],
+["standardized","adj","표준화된","The extract is {standardized} to five percent ginsenosides.","이 추출물은 진세노사이드 5퍼센트로 표준화되어 있습니다.","원료·품질",4,"추출물의 지표 성분 함량을 일정하게 맞췄다는 뜻입니다. be standardized to + 함량 + 성분 구조로 씁니다.","standardized extract=표준화 추출물|marker compound=지표 성분",""],
+["efficacy","n","유효성, 효능","We need more data on the {efficacy} of this dose.","이 용량의 유효성에 대한 데이터가 더 필요합니다.","규제·표시",4,"통제된 시험에서 확인된 효과입니다. 일상어 effect보다 과학적이고 규제 문서에 쓰이는 단어입니다.","safety and efficacy=안전성과 유효성|efficacy data=유효성 자료","efficiency는 '효율'로 전혀 다른 말입니다."],
+["potency","n","역가, 보장 함량","The probiotic must keep its {potency} until the expiry date.","프로바이오틱스는 유통기한까지 역가를 유지해야 합니다.","원료·품질",4,"성분이 효과를 내는 세기 또는 표시 함량입니다. 유산균에서는 보장 균수를 뜻합니다.","guaranteed potency=보장 함량|potency at expiry=유통기한 시점 함량",""],
+["scale up","phr","생산 규모를 늘리다","We can {scale up} production after the pilot batch.","시험 생산 배치 이후에 생산 규모를 늘릴 수 있습니다.","제품 개발",4,"실험실이나 시험 생산 단계에서 양산 단계로 키우는 것입니다. 명사는 scale-up입니다.","pilot batch=시험 생산 배치|commercial scale=양산 규모",""],
+["regulatory approval","phr","규제 당국의 허가","The launch depends on {regulatory approval} in Korea.","출시는 한국 내 규제 당국의 허가에 달려 있습니다.","규제·표시",4,"식약처 등 당국의 인허가입니다. regulatory는 '규제의'라는 형용사로 regulatory affairs(인허가 업무)처럼 씁니다.","regulatory affairs=인허가 업무|obtain approval=허가를 받다",""],
+["third-party testing","phr","제3자 시험","We require {third-party testing} for heavy metals.","중금속에 대해 제3자 시험을 요구합니다.","원료·품질",4,"제조사도 구매자도 아닌 독립 기관이 하는 시험입니다. 성적서의 신뢰도를 높이기 위해 요구합니다.","independent lab=독립 시험기관|heavy metals=중금속",""],
+/* ── 5단계 ── */
+["indemnify","v","면책하다, 배상하다","The manufacturer shall {indemnify} the distributor against product liability claims.","제조사는 제조물 책임 청구에 대해 유통사를 면책한다.","계약",5,"제3자의 청구로 상대가 입는 손해를 대신 책임지겠다는 계약 용어입니다. indemnify A against B 구조로 쓰고 명사는 indemnity입니다.","indemnify and hold harmless=면책하고 손해를 입히지 않다|indemnification clause=면책 조항","compensate는 일반적인 보상, indemnify는 계약상 면책·배상 의무입니다."],
+["force majeure","phr","불가항력","The supplier cited {force majeure} after the factory flood.","공급사는 공장 침수 이후 불가항력을 주장했습니다.","계약",5,"천재지변이나 전쟁처럼 통제할 수 없는 사유로 의무 이행이 면제되는 조항입니다. 프랑스어에서 온 말입니다.","force majeure clause=불가항력 조항|invoke force majeure=불가항력을 원용하다",""],
+["without prejudice","phr","권리를 포기하지 않는 조건으로","This offer is made {without prejudice} to our legal rights.","이 제안은 당사의 법적 권리를 해하지 않는 조건으로 드리는 것입니다.","클레임",5,"분쟁 중 화해 제안을 할 때, 그 제안이 나중에 불리한 증거로 쓰이지 않도록 붙이는 문구입니다.","without prejudice basis=권리 유보 조건|settlement offer=화해 제안",""],
+["substantiate","v","입증하다","You must {substantiate} every claim with published studies.","모든 기능성 표시는 발표된 연구로 입증해야 합니다.","규제·표시",5,"주장에 대해 구체적인 근거를 댄다는 뜻입니다. 기능성 표시·광고 심의에서 claim substantiation(표시 근거 자료)이라는 말로 자주 나옵니다.","substantiate a claim=표시를 입증하다|scientific substantiation=과학적 근거","prove보다 격식 있고 '근거 자료를 갖춘다'는 뉘앙스입니다."],
+["notwithstanding","prep","~에도 불구하고","{Notwithstanding} section five, either party may end the trial period early.","제5조에도 불구하고, 어느 당사자든 시험 기간을 조기에 종료할 수 있습니다.","계약",5,"계약서에서 '다른 조항이 뭐라고 하든 이 조항이 우선한다'는 뜻으로 씁니다. 일상어 despite의 법률 문서 버전입니다.","notwithstanding the foregoing=전술한 내용에도 불구하고|notwithstanding anything to the contrary=반대되는 내용이 있더라도",""],
+["arbitration","n","중재","Any dispute shall be settled by {arbitration} in Singapore.","모든 분쟁은 싱가포르에서 중재로 해결한다.","계약",5,"법원 소송 대신 중재인의 판정으로 분쟁을 끝내는 절차입니다. 국제 계약에서는 중재지와 중재 규칙을 명시합니다.","arbitration clause=중재 조항|binding arbitration=구속력 있는 중재","mediation(조정)은 합의를 돕는 절차로 결과에 강제력이 없습니다."],
+["in good faith","phr","성실하게, 신의에 따라","Both parties agree to negotiate the renewal {in good faith}.","양 당사자는 갱신을 성실하게 협상하기로 합의한다.","계약",5,"속이거나 시간을 끌 의도 없이 정직하게 임한다는 뜻입니다. 계약서뿐 아니라 협상 메일에서도 씁니다.","negotiate in good faith=성실히 협상하다|act in good faith=신의에 따라 행동하다",""],
+["intellectual property","phr","지식재산권","All {intellectual property} in the formula belongs to the buyer.","해당 배합에 대한 모든 지식재산권은 구매자에게 귀속됩니다.","계약",5,"특허·상표·배합·디자인 등 무형의 권리이며 IP로 줄여 씁니다. 맞춤 배합을 개발할 때 누가 소유하는지 반드시 정해야 합니다.","IP ownership=지식재산권 귀속|trademark=상표",""],
+["placebo-controlled","adj","위약 대조의","The claim is based on a {placebo-controlled} study of twelve weeks.","이 기능성 표시는 12주간의 위약 대조 연구에 근거합니다.","규제·표시",5,"가짜 약(placebo)을 먹은 집단과 비교한 시험이라는 뜻입니다. randomized, double-blind와 함께 임상 근거의 질을 나타냅니다.","double-blind=이중맹검|randomized=무작위 배정",""],
+["breach","n","위반","Late delivery is a {breach} of the supply agreement.","납기 지연은 공급 계약 위반입니다.","계약",5,"계약상 의무를 어기는 것으로 동사로도 씁니다. 중대한 위반은 material breach이며 계약 해지 사유가 됩니다.","breach of contract=계약 위반|material breach=중대한 위반","violation은 법규 위반, breach는 계약·의무 위반입니다."],
+["waive","v","(권리·요금을) 포기하다, 면제하다","The supplier agreed to {waive} the tooling fee.","공급사는 금형비를 면제해 주기로 했습니다.","가격 협상",5,"받을 수 있는 돈이나 권리를 자발적으로 행사하지 않는 것입니다. 명사는 waiver입니다.","waive a fee=수수료를 면제하다|waive the right=권리를 포기하다",""],
+["due diligence","phr","실사","We will visit the factory as part of our {due diligence}.","실사의 일환으로 공장을 방문하겠습니다.","계약",5,"거래나 투자 전에 상대의 실체와 위험을 조사하는 과정입니다. 신규 공급사 검증(supplier audit)도 넓게는 여기에 들어갑니다.","conduct due diligence=실사를 수행하다|supplier audit=공급사 실사",""],
+["concession","n","양보","We made a {concession} on price, so we expect flexibility on payment.","가격에서 양보했으니 결제 조건에서는 유연성을 기대합니다.","가격 협상",5,"협상에서 상대에게 내어주는 조건입니다. 하나를 주고 하나를 받는 흐름을 만들 때 쓰며 동사는 concede입니다.","make a concession=양보하다|mutual concessions=상호 양보",""],
+["leverage","v","활용하다, 지렛대로 삼다","We can {leverage} our sales network to grow your brand in Korea.","저희 판매망을 활용해 한국에서 귀사 브랜드를 키울 수 있습니다.","가격 협상",5,"가진 자원을 최대한 이용해 더 큰 효과를 낸다는 뜻입니다. 명사로는 협상에서의 '우위, 지렛대'입니다.","leverage our network=네트워크를 활용하다|bargaining leverage=협상 우위",""],
+["adulterated","adj","부정 물질이 혼입된","Customs rejected the shipment because the product was {adulterated}.","제품에 부정 물질이 혼입되어 세관이 화물을 반려했습니다.","규제·표시",5,"허용되지 않은 성분이 섞였거나 기준을 벗어난 상태입니다. 의약품 성분이 검출된 건강기능식품이 대표 사례이며 명사는 adulteration입니다.","adulterated product=부정 혼입 제품|undeclared ingredient=미표시 성분","contaminated는 의도치 않은 오염, adulterated는 부정 혼입이나 기준 위반입니다."],
+["confidentiality","n","비밀유지","The {confidentiality} obligation survives the end of this agreement.","비밀유지 의무는 본 계약 종료 후에도 존속합니다.","계약",5,"받은 정보를 외부에 알리지 않을 의무입니다. 배합이나 가격을 논의하기 전에 NDA(비밀유지계약)를 먼저 맺습니다.","confidentiality agreement=비밀유지계약|non-disclosure agreement=NDA",""]
+];
+/* 문법: 첫 번째 보기가 정답 (화면에서는 섞어서 표시). 마지막 값은 단계 */
+const G = [
+["We look forward to ___ from you soon.",["hearing","hear","heard","be heard"],"look forward to의 to는 전치사라서 뒤에 동명사(-ing)가 옵니다.","동명사",2],
+["The goods ___ shipped last Friday.",["were","was","has been","is"],"goods(물품)는 항상 복수 취급합니다. 과거 시점이므로 were.","수일치",3],
+["Please reply ___ Friday at the latest.",["by","until","to","in"],"by는 '~까지(기한)', until은 '~까지 계속'. 회신 기한이므로 by.","전치사",2],
+["If the price ___ lower, we would order more.",["were","is","will be","has been"],"현재 사실과 반대되는 가정: If + 과거형(were), would + 동사원형.","가정법",3],
+["We have been working with this supplier ___ 2019.",["since","for","from","during"],"시작 시점 앞에는 since, 기간(three years) 앞에는 for를 씁니다.","전치사",2],
+["The shipment is expected to arrive ___ March 3rd.",["on","in","at","for"],"특정 날짜 앞에는 on, 월·연도 앞에는 in을 씁니다.","전치사",1],
+["Could you tell me when ___?",["the goods will arrive","will the goods arrive","do the goods arrive","arrive the goods"],"간접의문문은 '의문사 + 주어 + 동사' 평서문 어순입니다.","어순",3],
+["I suggest ___ the order into two shipments.",["splitting","to split","splits","to splitting"],"suggest 뒤에는 동명사가 옵니다 (to부정사 불가).","동명사",3],
+["We would appreciate ___ if you could send the documents today.",["it","that","this","them"],"appreciate it if ~ 는 정중한 요청의 굳어진 표현입니다.","표현",4],
+["The invoice ___ yet.",["hasn't been paid","didn't pay","isn't paying","hasn't paid"],"인보이스는 '지급되는' 대상이므로 수동태, yet과 함께 현재완료.","수동태",3],
+["Neither the invoice nor the packing list ___ attached.",["was","were","have been","are"],"neither A nor B는 동사를 B(the packing list, 단수)에 맞춥니다.","수일치",4],
+["We need more ___ about the delivery schedule.",["information","informations","an information","informationes"],"information은 셀 수 없는 명사라 복수형이나 an을 쓰지 않습니다.","명사",2],
+["Prices are subject ___ change without notice.",["to","for","of","with"],"be subject to ~: '~될 수 있다, ~의 대상이다'.","전치사",3],
+["___ the delay, we still met the launch date.",["Despite","Although","Because","Even"],"명사구(the delay) 앞에는 전치사 despite. although 뒤에는 절이 옵니다.","접속사·전치사",4],
+["We are interested ___ becoming your distributor in Korea.",["in","on","at","for"],"be interested in + 명사/동명사.","전치사",1],
+["Please let me ___ if you need anything else.",["know","to know","knowing","known"],"let + 목적어 + 동사원형.","사역동사",1],
+["The contract will be signed as soon as our lawyer ___ it.",["reviews","will review","reviewed","would review"],"시간 부사절(as soon as, when)에서는 미래를 현재시제로 씁니다.","시제",3],
+["This is the supplier ___ products we tested last year.",["whose","who","which","that"],"'그 공급사의 제품'이라는 소유 관계이므로 whose.","관계대명사",4],
+["Our sales increased ___ 15 percent, from 100 to 115 units.",["by","at","with","in"],"증감의 '폭'은 by, 도달한 수치는 to로 나타냅니다.","전치사",3],
+["I'm afraid we can't accept the offer ___ you lower the price.",["unless","if","because","so"],"unless = if ~ not. '가격을 낮추지 않는 한'.","접속사",3],
+["We had the samples ___ by an independent lab.",["tested","test","testing","to test"],"have + 목적어 + 과거분사: (남에게 시켜) ~되게 하다.","사역동사",4],
+["The more you order, ___ the unit price becomes.",["the lower","lower","the lowest","more low"],"The 비교급 ~, the 비교급 ~: '~할수록 더 ~하다'.","비교",4],
+["By the time you arrive, we ___ the inspection.",["will have finished","finish","have finished","finished"],"미래의 어느 시점까지 완료될 일은 미래완료(will have p.p.).","시제",4],
+["Thank you for your ___ reply.",["prompt","promptly","promptness","prompting"],"명사 reply를 꾸미므로 형용사 prompt.","품사",2],
+["We ___ a sample last week.",["sent","send","sends","sending"],"last week처럼 과거 시점이 있으면 과거형을 씁니다. send의 과거형은 sent.","시제",1],
+["There ___ two boxes in the shipment.",["are","is","be","am"],"There is/are는 뒤에 오는 명사에 맞춥니다. two boxes는 복수이므로 are.","수일치",1],
+["This is ___ excellent product.",["an","a","some","many"],"모음 소리(e)로 시작하는 단어 앞에는 an을 씁니다.","관사",1],
+["Our office is ___ Seoul.",["in","on","at","to"],"도시·나라처럼 넓은 장소 앞에는 in을 씁니다.","전치사",1],
+["How ___ bottles do you need?",["many","much","any","lot"],"셀 수 있는 명사(bottles)의 수량은 how many, 셀 수 없는 명사는 how much로 묻습니다.","수량",1],
+["She ___ in the quality team.",["works","work","working","to work"],"주어가 3인칭 단수(she)이고 현재시제이면 동사에 -s를 붙입니다.","수일치",1],
+["We are ___ for your reply.",["waiting","wait","waited","waits"],"be동사 + -ing는 지금 진행 중인 일을 나타냅니다.","시제",1],
+["Had we known about the delay, we ___ the launch.",["would have postponed","will postpone","postponed","would postpone"],"If we had known에서 if를 생략하고 도치한 가정법 과거완료입니다. 주절은 would have + 과거분사.","가정법",5],
+["Not only ___ late, but it was also damaged.",["did the shipment arrive","the shipment arrived","arrived the shipment","the shipment did arrive"],"Not only가 문장 앞에 오면 의문문처럼 '조동사 + 주어 + 동사'로 도치됩니다.","도치",5],
+["The supplier denied ___ the formula without notice.",["changing","to change","change","to changing"],"deny 뒤에는 동명사가 옵니다. '~한 것을 부인하다'.","동명사",5]
+];
+const SEED_V = V.map((a,i)=>({id:"v"+(i+1),w:a[0],pos:a[1],m:a[2],s:a[3],tr:a[4],tag:a[5],lv:a[6],ex:a[7],co:parseCo(a[8]),cf:a[9]||"",src:"seed"}));
+const SEED_G = G.map((a,i)=>({id:"g"+(i+1),q:a[0],o:a[1],ex:a[2],pt:a[3],lv:a[4],src:"seed"}));
+const TOPICS = ["건기식 제품 개발","원료·규격·품질","기능성·임상 근거","인허가·표시 규정","OEM·위탁 제조","견적·발주","가격 협상","선적·물류","통관·서류","결제","품질·클레임","계약","이메일·회의","전시회·미팅","마케팅·영업"];
+const POS = {n:"명사",v:"동사",adj:"형용사",adv:"부사",phr:"표현",prep:"전치사"};
+const LEVELS = [null,
+  {name:"기초",desc:"가격·주문·제품을 말하는 기본 단어, 짧은 문장",ai:"CEFR A2. Very common everyday business words. Sentences of 6 to 9 words with simple grammar."},
+  {name:"실무 기본",desc:"견적, 발주, 출하, 일정 조율, 제품 기본 용어",ai:"CEFR B1. Standard words for orders, shipping, scheduling and basic product terms. Sentences of 8 to 12 words."},
+  {name:"실무 심화",desc:"통관·결제·클레임, 제형·원료·배합",ai:"CEFR B1+ to B2. Trade documents, payment, claims, formulation and raw-material terms. Sentences of 10 to 14 words."},
+  {name:"전문",desc:"계약 조건과 협상, 기능성·임상·인허가 용어",ai:"CEFR B2 to C1. Contract terms, negotiation, regulatory and clinical/scientific supplement terminology. Sentences of 12 to 16 words."},
+  {name:"고급",desc:"법률 문구, 협상의 뉘앙스, 과학적 근거 표현",ai:"CEFR C1. Legal drafting language, subtle negotiation phrasing, scientific substantiation language. Sentences of 12 to 18 words."}];
+const MODES = {
+  vocab:{name:"어휘",desc:"문장 속 빈칸에 알맞은 표현 쓰기"},
+  listen:{name:"듣기",desc:"문장을 듣고 단어를 순서대로 맞추기"},
+  speak:{name:"말하기",desc:"문장을 소리 내어 말하고 인식 결과 확인"},
+  grammar:{name:"문법",desc:"무역 문장으로 푸는 4지선다"}
+};
+const DAY = 86400000, IV = [0,1,3,7,14,30,60,120];
+const MAX_VOCAB = 400, MAX_GRAMMAR = 150;
+
+/* ───────────── 상태·저장 ───────────── */
+const LS = {progress:"tonggwa.progress.v1", cards:"tonggwa.cards.v1"};
+const S = {
+  progress:{t:0,items:{},log:{},lvl:{cur:0,sel:0},settings:{rate:1,auto:true,size:10}},
+  cards:{t:0,vocab:[],grammar:[]},
+  view:"home", session:null,
+  test:null,
+  lib:{tab:"ai",topic:TOPICS[0],level:0,kind:"vocab",preview:null,busy:false,msg:"",err:false,count:0},
+  resetArm:false
+};
+function lsGet(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function normProgress(p){p=p||{};return{t:+p.t||0,items:p.items&&typeof p.items==="object"?p.items:{},log:p.log&&typeof p.log==="object"?p.log:{},
+  lvl:{cur:Math.max(0,Math.min(5,+(p.lvl&&p.lvl.cur)||0)),sel:Math.max(0,Math.min(5,+(p.lvl&&p.lvl.sel)||0))},
+  settings:Object.assign({rate:1,auto:true,size:10},p.settings||{})}}
+function normCards(c){c=c||{};return{t:+c.t||0,vocab:Array.isArray(c.vocab)?c.vocab:[],grammar:Array.isArray(c.grammar)?c.grammar:[]}}
+S.progress = normProgress(lsGet(LS.progress));
+S.cards = normCards(lsGet(LS.cards));
+
+const cloud = {refs:{},status:"local",timer:{},inflight:{},dirty:{}};
+function save(key){
+  S[key].t = Date.now();
+  if(key==="progress") pruneLog();
+  lsSet(LS[key],S[key]);
+  queueCloud(key);
+}
+function queueCloud(key){
+  if(!cloud.refs[key]) return;
+  cloud.dirty[key]=true;
+  clearTimeout(cloud.timer[key]);
+  cloud.timer[key]=setTimeout(()=>flush(key,0),1500);
+}
+async function flush(key,attempt){
+  if(cloud.inflight[key]||!cloud.dirty[key]) return;
+  cloud.inflight[key]=true; cloud.dirty[key]=false;
+  try{ await cloud.refs[key].set(JSON.parse(JSON.stringify(S[key]))); }
+  catch(e){
+    if(e&&e.code==="unavailable"&&attempt<1){cloud.dirty[key]=true;setTimeout(()=>flush(key,attempt+1),2500+Math.random()*1500);}
+    else{cloud.status="local";cloud.refs={};}
+  }
+  finally{cloud.inflight[key]=false; if(cloud.dirty[key]&&cloud.refs[key]) setTimeout(()=>flush(key,0),800);}
+}
+const AI = {sample:null,ctl:null};
+const AI_MODELS = ["gemini-3.8-flash","gemini-flash-latest"];   /* 앞에서부터 시도합니다. 다른 모델을 쓰려면 이 줄만 바꾸면 됩니다 */
+const LS_KEY = "tonggwa.geminikey.v1";
+const STANDALONE = !(window.claude&&typeof window.claude.use==="function");
+function getKey(){try{return localStorage.getItem(LS_KEY)||""}catch(e){return ""}}
+function aiErr(code){const e=new Error(code);e.code=code;return e}
+async function geminiCall(key,model,prompt,signal,jsonMode){
+  const body={contents:[{role:"user",parts:[{text:prompt}]}]};
+  if(jsonMode)body.generationConfig={responseMimeType:"application/json"};
+  let r;
+  try{r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent",
+    {method:"POST",signal,headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify(body)})}
+  catch(e){throw aiErr(e&&e.name==="AbortError"?"cancelled":"upstream_error")}
+  if(!r.ok){let msg="";try{const j=await r.json();msg=(j&&j.error&&(j.error.status+" "+j.error.message))||""}catch(e){}
+    if(r.status===404)throw aiErr("bad_model");
+    if(r.status===429)throw aiErr("rate_limited");
+    if(r.status===401||r.status===403||/API[_ ]?KEY|api key/i.test(msg))throw aiErr("bad_key");
+    if(r.status===400)throw aiErr("bad_request");
+    throw aiErr("upstream_error")}
+  const data=await r.json(),cand=data&&data.candidates&&data.candidates[0];
+  if(!cand){throw aiErr(data&&data.promptFeedback&&data.promptFeedback.blockReason?"refused":"empty_completion")}
+  const text=((cand.content&&cand.content.parts)||[]).filter(x=>x&&typeof x.text==="string"&&!x.thought).map(x=>x.text).join("");
+  if(!text.trim())throw aiErr(/SAFETY|PROHIBITED|BLOCK/i.test(cand.finishReason||"")?"refused":"empty_completion");
+  return text;
+}
+function directSample(key){return{json:async(prompt,opts)=>{
+  const signal=opts&&opts.signal;let text=null,last=null;
+  for(const model of AI_MODELS){
+    try{text=await geminiCall(key,model,prompt,signal,true);break}
+    catch(e){last=e;
+      if(e.code==="bad_request"){try{text=await geminiCall(key,model,prompt,signal,false);break}catch(e2){last=e2;if(e2.code!=="bad_model")throw e2}}
+      else if(e.code!=="bad_model")throw e}
+  }
+  if(text==null)throw last||aiErr("upstream_error");
+  const a=text.indexOf("["),b=text.lastIndexOf("]");
+  if(a<0||b<=a)throw aiErr("invalid_json");
+  try{return JSON.parse(text.slice(a,b+1))}catch(e){throw aiErr("invalid_json")}
+}}}
+function refreshDirectAI(){if(STANDALONE){const k=getKey();AI.sample=k?directSample(k):null}}
+async function initRuntime(){
+  if(STANDALONE){refreshDirectAI();
+    try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+    try{if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js")}catch(e){}
+    return}
+  window.claude.use("sample").then(s=>{AI.sample=s||null; if(S.view==="lib"&&!S.lib.busy&&!hasDraft()) render();}).catch(()=>{});
+  try{
+    const [db,user] = await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    const uid = user ? await user.id() : null;
+    if(!db||!uid) return;
+    const refs = {progress:db.doc("data/users/"+uid+"/progress"), cards:db.doc("data/users/"+uid+"/cards")};
+    for(const key of ["progress","cards"]){
+      const snap = await refs[key].get();
+      const remote = snap.exists ? JSON.parse(JSON.stringify(snap.data())) : null;
+      if(remote && (+remote.t||0) > S[key].t){
+        S[key] = key==="progress" ? normProgress(remote) : normCards(remote);
+        lsSet(LS[key],S[key]);
+      }
+    }
+    cloud.refs = refs; cloud.status="cloud";
+    for(const key of ["progress","cards"]) if(S[key].t>0) queueCloud(key);
+    if(S.view!=="session"&&S.view!=="test"&&!hasDraft()) render();
+  }catch(e){ cloud.status="local"; }
+}
+function hasDraft(){return Array.prototype.some.call(document.querySelectorAll("#words,#m-w,#m-m,#m-s,#m-t,#customTopic,#apikey"),el=>!!el.value)}
+
+/* ───────────── 유틸 ───────────── */
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function dkey(d){d=d||new Date();const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function parseS(s){const m=/\{([^{}]+)\}/.exec(s);if(!m)return null;return{before:s.slice(0,m.index),answer:m[1],after:s.slice(m.index+m[0].length),full:s.replace(/[{}]/g,"")}}
+function norm(s){return String(s).toLowerCase().replace(/[’`]/g,"'").replace(/[^a-z0-9' ]/g," ").replace(/\s+/g," ").trim()}
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let prev=[];for(let j=0;j<=n;j++)prev[j]=j;
+  for(let i=1;i<=m;i++){const cur=[i];for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[n]}
+const NUMW={zero:"0",one:"1",two:"2",three:"3",four:"4",five:"5",six:"6",seven:"7",eight:"8",nine:"9",ten:"10",eleven:"11",twelve:"12",thirteen:"13",fourteen:"14",fifteen:"15",sixteen:"16",seventeen:"17",eighteen:"18",nineteen:"19",twenty:"20",thirty:"30",forty:"40",fifty:"50",sixty:"60",seventy:"70",eighty:"80",ninety:"90",first:"1st",second:"2nd",third:"3rd"};
+function spTokens(s){return String(s).toLowerCase().replace(/%/g," percent").replace(/[’']/g,"").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean).map(w=>NUMW[w]||w)}
+function lcsFlags(target,heard){const m=target.length,n=heard.length,dp=[];for(let i=0;i<=m;i++){dp[i]=new Array(n+1).fill(0)}
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)dp[i][j]=target[i-1]===heard[j-1]?dp[i-1][j-1]+1:Math.max(dp[i-1][j],dp[i][j-1]);
+  const f=new Array(m).fill(false);let i=m,j=n;while(i>0&&j>0){if(target[i-1]===heard[j-1]){f[i-1]=true;i--;j--}else if(dp[i-1][j]>=dp[i][j-1])i--;else j--}
+  return f}
+let toastT;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),2400)}
+
+/* ───────────── 음성 ───────────── */
+const TTS={ok:"speechSynthesis" in window && typeof window.SpeechSynthesisUtterance==="function",voice:null};
+function pickVoice(){try{const vs=speechSynthesis.getVoices()||[];const pref=["Samantha","Google US English","Microsoft Aria","Microsoft Jenny","Alex"];
+  TTS.voice=vs.find(v=>pref.some(p=>v.name.indexOf(p)>=0)&&/^en/i.test(v.lang))||vs.find(v=>/^en[-_]US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null}catch(e){}}
+if(TTS.ok){pickVoice();try{speechSynthesis.addEventListener("voiceschanged",pickVoice)}catch(e){}}
+function say(text,mult){if(!TTS.ok)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="en-US";if(TTS.voice)u.voice=TTS.voice;
+  u.rate=Math.max(.5,Math.min(1.4,(mult||1)*(+S.progress.settings.rate||1)));speechSynthesis.speak(u)}catch(e){}}
+const SRClass = window.SpeechRecognition||window.webkitSpeechRecognition||null;
+let srBlocked = !SRClass, rec=null;
+
+/* ───────────── 학습 로직 ───────────── */
+function allVocab(){return S.cards.vocab.concat(SEED_V)}
+function allGrammar(){return S.cards.grammar.concat(SEED_G)}
+function pool(mode){return mode==="grammar"?allGrammar():allVocab()}
+function findItem(mode,id){return pool(mode).find(x=>x.id===id)}
+function curSel(){const l=S.progress.lvl;return l.cur?Math.min(l.sel||l.cur,l.cur):1}
+function exposed(mode,it){if(it.src!=="seed"||!it.lv)return true;const sel=curSel();return mode==="grammar"?it.lv<=sel:it.lv===sel}
+function counts(mode){const now=Date.now();let due=0,nw=0;for(const it of pool(mode)){const p=S.progress.items[mode+"|"+it.id];if(!p){if(exposed(mode,it))nw++}else if(p.d<=now)due++}return{due,nw}}
+function lvStat(lv){const items=SEED_V.filter(x=>x.lv===lv);let ok=0,seen=0;items.forEach(x=>{const p=S.progress.items["vocab|"+x.id];if(p){seen++;if(p.s>=2)ok++}});return{total:items.length,ok,seen}}
+function checkLevelUp(){const l=S.progress.lvl;if(!l.cur||l.cur>=5)return;const st=lvStat(l.cur);if(st.total&&st.ok/st.total>=.8){l.cur++;l.sel=l.cur;setTimeout(()=>toast(l.cur+"단계가 열렸습니다"),600)}}
+function buildQueue(mode,extra){
+  const now=Date.now(),size=+S.progress.settings.size||10,P=S.progress.items,items=pool(mode);
+  if(extra){return items.filter(x=>P[mode+"|"+x.id]).sort((a,b)=>P[mode+"|"+a.id].d-P[mode+"|"+b.id].d).slice(0,size).map(x=>x.id)}
+  const due=items.filter(x=>P[mode+"|"+x.id]&&P[mode+"|"+x.id].d<=now).sort((a,b)=>P[mode+"|"+a.id].d-P[mode+"|"+b.id].d);
+  const fresh=items.filter(x=>!P[mode+"|"+x.id]&&exposed(mode,x));
+  const mine=fresh.filter(x=>x.src!=="seed"), seed=shuffle(fresh.filter(x=>x.src==="seed")).sort((a,b)=>(a.lv||0)-(b.lv||0));
+  return due.concat(mine,seed).slice(0,size).map(x=>x.id);
+}
+function grade(mode,id,res){
+  const k=mode+"|"+id,now=Date.now(),it=S.progress.items[k]||{s:0,d:0,r:0,w:0};
+  if(res==="good"){it.s=Math.min(it.s+1,7);it.r++;it.d=now+IV[it.s]*DAY}
+  else if(res==="hard"){it.s=Math.max(it.s,1);it.r++;it.d=now+DAY}
+  else{it.s=0;it.w++;it.d=now+10*60000}
+  S.progress.items[k]=it;
+  const dk=dkey(),lg=S.progress.log[dk]||{n:0,c:0,m:{}};lg.m=lg.m||{};
+  lg.n++;if(res!=="again")lg.c++;
+  const mm=lg.m[mode]||[0,0];mm[0]++;if(res!=="again")mm[1]++;lg.m[mode]=mm;
+  S.progress.log[dk]=lg;
+  if(mode==="vocab")checkLevelUp();
+  save("progress");
+}
+function pruneLog(){const ks=Object.keys(S.progress.log).sort();while(ks.length>180){delete S.progress.log[ks.shift()]}}
+function streak(){let n=0;const d=new Date();if(!(S.progress.log[dkey(d)]||{}).n)d.setDate(d.getDate()-1);
+  while((S.progress.log[dkey(d)]||{}).n){n++;d.setDate(d.getDate()-1)}return n}
+function startSession(mode,extra){
+  const q=buildQueue(mode,extra);
+  if(!q.length){toast("지금 학습할 항목이 없습니다");return}
+  S.session={mode,queue:q,idx:0,first:{},retried:{},total:q.length,card:null};
+  S.view="session";newCard();render();announce();
+}
+function newCard(){
+  const ss=S.session,id=ss.queue[ss.idx],it=findItem(ss.mode,id);
+  if(!it){ss.card=null;return}
+  const c={phase:"ask",id,res:null};
+  if(ss.mode!=="grammar"){const p=parseS(it.s);c.p=p;c.full=p.full}
+  if(ss.mode==="vocab"){c.hint=0;c.typed="";if(!S.progress.items["vocab|"+id])c.phase="intro"}
+  if(ss.mode==="listen"){
+    const toks=c.full.replace(/[.,!?;:]/g,"").split(/\s+/).filter(Boolean);
+    if(toks[0]!=="I"&&!/^I'/.test(toks[0]))toks[0]=toks[0].charAt(0).toLowerCase()+toks[0].slice(1);
+    c.target=toks;
+    const others=shuffle(allVocab().filter(x=>x.id!==id)).slice(0,6).map(x=>parseS(x.s).answer.split(" ")[0].toLowerCase());
+    const dis=[];for(const o of others){if(dis.length<2&&!toks.some(t=>t.toLowerCase()===o)&&dis.indexOf(o)<0)dis.push(o)}
+    c.bank=shuffle(toks.concat(dis)).map(t=>({t,used:false}));c.built=[];
+  }
+  if(ss.mode==="speak"){c.best=null;c.heard="";c.flags=null;c.state="idle";c.msg="";c.mask=false}
+  if(ss.mode==="grammar"){c.opts=shuffle(it.o.map((t,i)=>({t,ok:i===0})));c.pick=-1}
+  ss.card=c;
+}
+function announce(){const ss=S.session,c=ss&&ss.card;if(!c)return;
+  if(ss.mode==="listen")say(c.full);
+  else if(ss.mode==="vocab"&&c.phase==="intro"&&S.progress.settings.auto){const it=findItem("vocab",c.id);if(it)say(it.w)}}
+function finishCard(res){
+  const ss=S.session,c=ss.card;c.phase="done";c.res=res;
+  grade(ss.mode,c.id,res);
+  if(!(c.id in ss.first))ss.first[c.id]=res;
+  if(res==="again"&&!ss.retried[c.id]){ss.retried[c.id]=true;ss.queue.push(c.id)}
+  render();
+  if(S.progress.settings.auto&&ss.mode==="vocab")say(c.full);
+}
+function nextCard(){
+  const ss=S.session;if(rec){try{rec.abort()}catch(e){}rec=null}
+  ss.idx++;
+  if(ss.idx>=ss.queue.length){S.view="result";if(TTS.ok)try{speechSynthesis.cancel()}catch(e){};render();return}
+  newCard();render();announce();
+}
+
+/* ───────────── 화면 ───────────── */
+function render(){
+  const app=$("#app");
+  document.body.classList.toggle("in-session",S.view==="session"||S.view==="result"||S.view==="test");
+  document.querySelectorAll("#nav button").forEach(b=>{if(b.dataset.nav===S.view)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  app.innerHTML = S.view==="home"?vHome():S.view==="lib"?vLib():S.view==="stats"?vStats():S.view==="session"?vSession():S.view==="test"?vTest():vResult();
+  if(S.view==="session"&&S.session.card&&S.session.card.phase==="ask"&&S.session.mode==="vocab"){const a=$("#ans");if(a){a.value=S.session.card.typed||"";try{a.focus({preventScroll:true})}catch(e){a.focus()}}}
+  if(S.view==="session"&&S.session.mode==="listen")drawChips();
+}
+function top(){const st=streak();return `<header class="top"><div class="brand">통과<small>무역 영어 훈련</small></div><div class="streak">${st?`연속 <b>${st}일</b>`:"오늘 첫 학습을 시작해 보세요"}</div></header>`}
+
+function vHome(){
+  const L=S.progress.lvl;
+  if(!L.cur){
+    return top()+`<h1>먼저 내 단계를 확인합니다</h1>
+    <p class="sub">쉬운 표현부터 4문제씩 풀어 봅니다. 한 단계에서 3문제 이상 맞히면 다음 단계 문제로 넘어가고, 막히는 단계가 시작 단계가 됩니다. 길어도 20문제, 3분 정도입니다.</p>
+    <section class="sheet"><ol class="lvlist">${[1,2,3,4,5].map(n=>`<li><b>${n}단계 ${LEVELS[n].name}</b><span>${LEVELS[n].desc}</span></li>`).join("")}</ol></section>
+    <div class="actions"><button class="btn" data-act="skiptest">1단계부터 시작</button><button class="btn pri" data-act="starttest" data-kind="place">레벨 테스트 시작</button></div>`;
+  }
+  const sel=curSel(),st=lvStat(sel),pct=st.total?Math.round(st.ok/st.total*100):0;
+  let dueAll=0,newAll=0;const rows=Object.keys(MODES).map(m=>{const c=counts(m);dueAll+=c.due;newAll+=c.nw;
+    const blocked=(m==="listen"&&!TTS.ok);
+    const none=!c.due&&!c.nw;
+    return `<div class="mode"><div class="nm">${MODES[m].name}</div>
+      <div class="ds">${blocked?"이 브라우저는 음성 재생을 지원하지 않습니다":MODES[m].desc}</div>
+      <div class="ct"><span class="due">복습 <b>${c.due}</b></span><span>새 항목 <b>${c.nw}</b></span></div>
+      <div class="go"><button class="btn ${none?"":"pri"}" data-act="start" data-mode="${m}" ${none?'data-extra="1"':""} ${blocked?"disabled":""}>${none?"추가 연습":"시작"}</button></div></div>`}).join("");
+  const today=(S.progress.log[dkey()]||{}).n||0;
+  const lvBtns=[1,2,3,4,5].map(n=>`<button class="lv" data-act="sellv" data-lv="${n}" aria-pressed="${n===sel}" ${n>L.cur?'disabled aria-label="'+n+'단계 잠김"':'aria-label="'+n+'단계"'}>${n}</button>`).join("");
+  return top()+`<h1>${dueAll?`복습할 항목 ${dueAll}개`:newAll?"새 표현을 배울 차례입니다":"이 단계의 새 표현을 모두 시작했습니다"}</h1>
+  <p class="sub">${today?`오늘 ${today}문제를 풀었습니다. `:""}새 표현은 선택한 단계에서만 나오고, 복습은 모든 단계에서 1일·3일·7일·14일·30일 간격으로 돌아옵니다.</p>
+  <section class="sheet lvl"><div class="lvrow" role="group" aria-label="학습 단계">${lvBtns}</div>
+    <div class="lvinfo"><b>${sel}단계 ${LEVELS[sel].name}</b><span>${LEVELS[sel].desc}</span></div>
+    <div class="prog" role="img" aria-label="단계 진행률 ${pct}%"><i style="width:${pct}%"></i></div>
+    <p class="note">${st.total}개 중 ${st.ok}개를 두 번 이상 맞혔습니다.${sel===L.cur&&L.cur<5?` 80%(${Math.ceil(st.total*.8)}개)가 되면 ${L.cur+1}단계가 열립니다.`:""}</p>
+    ${sel===L.cur&&L.cur<5?`<div class="actions"><button class="btn sm" data-act="starttest" data-kind="up">지금 ${L.cur+1}단계 승급 테스트 보기</button></div>`:""}</section>
+  <section class="sheet modes" style="margin-top:12px">${rows}</section>
+  <h2>최근 14일</h2><section class="sheet">${bars()}</section>`;
+}
+function bars(){const ds=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);ds.push((S.progress.log[dkey(d)]||{}).n||0)}
+  const mx=Math.max.apply(null,ds.concat([10]));
+  return `<div class="bars" role="img" aria-label="최근 14일 학습량">${ds.map(n=>`<i class="${n?"":"zero"}" style="height:${n?Math.max(6,Math.round(n/mx*100)):3}%" title="${n}문제"></i>`).join("")}</div><div class="barlab"><span>2주 전</span><span>오늘 ${ds[13]}문제</span></div>`}
+
+function sbar(){const ss=S.session;return `<div class="sbar"><button class="x" data-act="quit">그만하기</button><div class="prog"><i style="width:${Math.round(ss.idx/ss.queue.length*100)}%"></i></div><span class="n">${Math.min(ss.idx+1,ss.queue.length)} / ${ss.queue.length}</span></div>`}
+function stampOf(res){return res==="good"?'<div class="stamp">통과</div>':res==="hard"?'<div class="stamp">재확인</div>':'<div class="stamp">보류</div>'}
+function clsOf(res){return res==="good"?"ok":res==="hard"?"soso":"bad"}
+
+function vSession(){
+  const ss=S.session,c=ss.card;if(!c)return sbar()+`<p class="sub">항목을 찾을 수 없습니다.</p><div class="actions"><button class="btn pri" data-act="next">다음</button></div>`;
+  const it=findItem(ss.mode,c.id);
+  if(ss.mode==="vocab")return sbar()+vVocab(it,c);
+  if(ss.mode==="listen")return sbar()+vListen(it,c);
+  if(ss.mode==="speak")return sbar()+vSpeak(it,c);
+  return sbar()+vGrammar(it,c);
+}
+function vVocab(it,c){
+  const p=c.p,head=`<span class="lab">뜻</span><p class="mean">${esc(it.m)}<em class="pos">${POS[it.pos]||""}</em></p>`;
+  if(c.phase==="intro"){
+    return `<section class="sheet card"><span class="lab">새 표현 ${it.lv?`(${it.lv}단계 ${esc(it.tag||"")})`:""}</span>
+      <p class="word">${esc(it.w)}</p><p class="mean">${esc(it.m)}<em class="pos">${POS[it.pos]||""}</em></p>
+      <p class="en">${esc(p.before)}<mark>${esc(p.answer)}</mark>${esc(p.after)}</p><p class="tr">${esc(it.tr)}</p>${detail(it)}</section>
+      <div class="actions">${TTS.ok?'<button class="btn" data-act="sayword">단어 듣기</button><button class="btn" data-act="say">문장 듣기</button>':""}<button class="btn pri" data-act="learn">문제 풀기</button></div>`;
+  }
+  if(c.phase==="ask"){
+    const w=Math.max(4,p.answer.length)+2;
+    return `<section class="sheet card">${head}
+      <p class="en">${esc(p.before)}<input id="ans" class="blank" style="width:${w}ch" aria-label="빈칸에 들어갈 표현" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">${esc(p.after)}</p>
+      <p class="tr">${esc(it.tr)}</p><p id="hint" class="hint" ${c.hint?"":"hidden"}>${esc(hintText(p.answer,c.hint))}</p></section>
+      <div class="actions"><button class="btn" data-act="hint">힌트</button><button class="btn" data-act="giveup">모르겠어요</button><button class="btn pri" data-act="check">확인</button></div>`;
+  }
+  const note=c.res==="good"?"":c.res==="hard"?`<p class="fb">${c.near?"철자가 조금 달랐습니다. ":""}${c.hint?"힌트를 사용해서 ":""}내일 한 번 더 확인합니다.</p>`:`<p class="fb no">10분 뒤에 다시 나옵니다.</p>`;
+  return `<section class="sheet card ${clsOf(c.res)}">${stampOf(c.res)}${head}
+    <p class="en">${esc(p.before)}<mark>${esc(p.answer)}</mark>${esc(p.after)}</p><p class="tr">${esc(it.tr)}</p>
+    ${c.typed&&c.res!=="good"?`<p class="yours">내 답: <s>${esc(c.typed)}</s></p>`:""}${note}${detail(it)}</section>
+    <div class="actions">${TTS.ok?'<button class="btn" data-act="say">다시 듣기</button>':""}<button class="btn pri" data-act="next">다음</button></div>`;
+}
+function detail(it){
+  const co=Array.isArray(it.co)?it.co.filter(x=>Array.isArray(x)&&x.length===2):[];
+  if(!it.ex&&!co.length&&!it.cf)return "";
+  return `<div class="detail">${it.ex?`<span class="lab">설명</span><p>${esc(it.ex)}</p>`:""}
+    ${co.length?`<span class="lab">자주 쓰는 조합</span><ul class="co">${co.map(x=>`<li><span>${esc(x[0])}</span>${esc(x[1])}</li>`).join("")}</ul>`:""}
+    ${it.cf?`<span class="lab">비교·주의</span><p>${esc(it.cf)}</p>`:""}</div>`;
+}
+function hintText(ans,n){let shown=0;return ans.split("").map(ch=>{if(ch===" ")return "  ";if(shown<n){shown++;return ch}return "_"}).join("")}
+function vListen(it,c){
+  if(c.phase==="ask")return `<section class="sheet card"><div class="playrow"><button class="btn pri" data-act="play">듣기</button><button class="btn" data-act="slow">천천히 듣기</button></div>
+    <div id="built" class="built" aria-label="내가 만든 문장"></div><div id="bank" class="bank" aria-label="단어 보기"></div></section>
+    <div class="actions"><button class="btn" data-act="giveup">모르겠어요</button><button class="btn pri" data-act="check">확인</button></div>`;
+  const mine=c.built.map(i=>c.bank[i].t).join(" ");
+  return `<section class="sheet card ${clsOf(c.res)}">${stampOf(c.res)}<span class="lab">정답</span>
+    <p class="en">${esc(c.full)}</p><p class="tr">${esc(it.tr)}</p>
+    ${c.res!=="good"&&mine?`<p class="yours">내 답: <s>${esc(mine)}</s></p>`:""}
+    <div class="detail"><span class="lab">핵심 표현</span><p><b class="kw">${esc(it.w)}</b> ${esc(it.m)}</p></div></section>
+    <div class="actions"><button class="btn" data-act="play">다시 듣기</button><button class="btn pri" data-act="next">다음</button></div>`;
+}
+function drawChips(){
+  const c=S.session&&S.session.card;if(!c||c.phase!=="ask")return;const b=$("#built"),k=$("#bank");if(!b||!k)return;
+  b.innerHTML=c.built.map((bi,pos)=>`<button class="chip" data-act="unchip" data-pos="${pos}">${esc(c.bank[bi].t)}</button>`).join("");
+  k.innerHTML=c.bank.map((x,i)=>`<button class="chip ${x.used?"used":""}" data-act="chip" data-i="${i}" ${x.used?'tabindex="-1" aria-hidden="true"':""}>${esc(x.t)}</button>`).join("");
+}
+function vSpeak(it,c){
+  const words=c.full.split(/\s+/);
+  const sentence=`<p class="en ${c.mask?"masked":""}" ${c.mask?'aria-hidden="true"':""}>${c.flags?words.map((w,i)=>`<span class="${c.flags[i]?"hit":"miss"}">${esc(w)}</span>`).join(" "):esc(c.full)}</p>`;
+  let out="";
+  if(c.state==="listening")out=`<div class="heard"><span class="listening">듣고 있습니다. 문장을 말해 주세요</span></div>`;
+  else if(c.best!=null)out=`<div class="heard"><span class="lab">인식된 문장</span><div class="w">${esc(c.heard||"(인식된 내용 없음)")}</div><p class="fb ${c.best>=80?"ok":c.best>=60?"":"no"}"><span class="score">${c.best}%</span> 일치${c.best>=80?"":". 빨간 단어를 다시 또렷하게 말해 보세요"}</p></div>`;
+  else if(c.msg)out=`<div class="heard"><p class="fb no">${esc(c.msg)}</p></div>`;
+  const tools=`<div class="playrow">${TTS.ok?'<button class="btn sm" data-act="play">듣기</button><button class="btn sm" data-act="slow">천천히</button>':""}<button class="btn sm" data-act="mask" aria-pressed="${c.mask}">${c.mask?"문장 보기":"문장 가리기"}</button></div>`;
+  let actions;
+  if(c.phase==="done")actions=`<button class="btn pri" data-act="next">다음</button>`;
+  else if(srBlocked)actions=`<button class="btn" data-act="self" data-res="again">어려웠어요</button><button class="btn pri" data-act="self" data-res="good">잘 말했어요</button>`;
+  else actions=`<button class="btn" data-act="spknext">${c.best==null?"건너뛰기":"다음"}</button><button class="btn pri" data-act="mic" ${c.state==="listening"?"disabled":""}>${c.best==null?"말하기 시작":"다시 말하기"}</button>`;
+  return `<section class="sheet card ${c.phase==="done"?clsOf(c.res):""}">${c.phase==="done"?stampOf(c.res):""}
+    <p class="tr big">${esc(it.tr)}</p>${sentence}${tools}${out}
+    ${srBlocked&&c.phase!=="done"?'<p class="note">이 환경에서는 마이크 음성 인식을 쓸 수 없습니다. 문장을 듣고 소리 내어 따라 말한 뒤 스스로 평가해 주세요.</p>':""}</section>
+    <div class="actions">${actions}</div>`;
+}
+function vGrammar(it,c){
+  const q=esc(it.q).replace(/_{2,}/,'<span class="blank" style="display:inline-block;min-width:5ch">&nbsp;</span>');
+  if(c.phase==="ask")return `<section class="sheet card"><p class="en">${q}</p><div class="opts">${c.opts.map((o,i)=>`<button class="opt" data-act="opt" data-i="${i}">${esc(o.t)}</button>`).join("")}</div></section>`;
+  const right=c.opts.find(o=>o.ok).t;
+  return `<section class="sheet card ${clsOf(c.res)}">${stampOf(c.res)}<p class="en">${esc(it.q).replace(/_{2,}/,`<mark>${esc(right)}</mark>`)}</p>
+    <div class="opts">${c.opts.map((o,i)=>`<button class="opt ${o.ok?"right":i===c.pick?"wrong":""}" disabled>${esc(o.t)}</button>`).join("")}</div>
+    <p class="explain"><b>${esc(it.pt||"문법")}</b>${esc(it.ex)}</p></section>
+    <div class="actions"><button class="btn pri" data-act="next">다음</button></div>`;
+}
+function vResult(){
+  const ss=S.session,ids=Object.keys(ss.first),ok=ids.filter(i=>ss.first[i]!=="again").length,pct=ids.length?Math.round(ok/ids.length*100):0;
+  const missed=ids.filter(i=>ss.first[i]==="again").map(i=>findItem(ss.mode,i)).filter(Boolean);
+  const c=counts(ss.mode);
+  return `<div class="sbar"><div class="prog"><i style="width:100%"></i></div></div>
+  <section class="sheet res"><span class="lab">${MODES[ss.mode].name} 학습 완료</span><div class="big">${ok} / ${ids.length}</div><p class="tr">첫 시도 정답률 ${pct}%</p>
+  ${missed.length?`<ul class="missed">${missed.map(x=>ss.mode==="grammar"?`<li>${esc(x.q.replace(/_{2,}/,x.o[0]))}</li>`:`<li><span>${esc(x.w)}</span>${esc(x.m)}</li>`).join("")}</ul><p class="note">틀린 항목은 10분 뒤 복습 목록에 다시 올라옵니다.</p>`:""}</section>
+  <div class="actions"><button class="btn" data-act="home">처음으로</button>${(c.due||c.nw)?`<button class="btn pri" data-act="start" data-mode="${ss.mode}">이어서 학습</button>`:""}</div>`;
+}
+
+/* 단어장 */
+function vLib(){
+  const L=S.lib;
+  const seg=`<div class="seg" role="group" aria-label="단어장 메뉴">${[["ai","AI로 만들기"],["mine","직접 추가"],["list","전체 목록"]].map(t=>`<button data-act="libtab" data-tab="${t[0]}" aria-pressed="${L.tab===t[0]}">${t[1]}</button>`).join("")}</div>`;
+  let body="";
+  if(L.preview)body=vPreview();
+  else if(L.tab==="ai")body=AI.sample?`<section class="sheet pad">
+      <label class="f" style="margin-top:0">주제</label><div class="topics">${TOPICS.map(t=>`<button class="tp" data-act="topic" data-t="${esc(t)}" aria-pressed="${L.topic===t}">${esc(t)}</button>`).join("")}</div>
+      <label class="f" for="customTopic">직접 입력한 주제가 있으면 위 선택보다 우선합니다</label><input id="customTopic" class="inp" placeholder="예: 원료 단가 인상 통보에 답하기" maxlength="80">
+      <div class="row2"><div><label class="f" for="level">단계</label><select id="level" class="inp">${[1,2,3,4,5].map(n=>`<option value="${n}" ${n===(L.level||curSel())?"selected":""}>${n}단계 ${LEVELS[n].name}</option>`).join("")}</select></div>
+      <div><label class="f" for="kind">종류</label><select id="kind" class="inp"><option value="vocab" ${L.kind==="vocab"?"selected":""}>어휘 8개</option><option value="grammar" ${L.kind==="grammar"?"selected":""}>문법 6문항</option></select></div></div>
+      ${genButtons("gen","만들기")}</section>`
+    :`<section class="sheet pad"><p class="tr">${STANDALONE?"기록 탭의 설정에 Gemini API 키를 넣으면 주제와 단계에 맞는 표현을 AI로 계속 만들 수 있습니다.":"AI 생성은 Claude 사용을 허용했을 때 작동합니다."} 키가 없어도 기본 ${SEED_V.length}개 표현과 '직접 추가'는 그대로 쓸 수 있습니다.</p></section>`;
+  else if(L.tab==="mine")body=`<section class="sheet pad">
+      ${AI.sample?`<label class="f" for="words" style="margin-top:0">외우고 싶은 단어·표현을 한 줄에 하나씩 (뜻을 알면 word = 뜻)</label>
+      <textarea id="words" class="inp" placeholder="indemnify&#10;force majeure = 불가항력&#10;in good faith" autocapitalize="off" spellcheck="false"></textarea>
+      ${genButtons("genmine","예문 만들기")}`:""}
+      <details class="manual" ${AI.sample?"":"open"}><summary>예문까지 직접 입력하기</summary>
+      <label class="f" for="m-w">단어·표현 (예문에 들어간 형태 그대로)</label><input id="m-w" class="inp" autocapitalize="off" spellcheck="false">
+      <label class="f" for="m-m">뜻</label><input id="m-m" class="inp">
+      <label class="f" for="m-s">영어 예문</label><input id="m-s" class="inp" autocapitalize="off" style="font-family:var(--en)">
+      <label class="f" for="m-t">예문 해석</label><input id="m-t" class="inp">
+      <div class="actions"><button class="btn pri" data-act="addmanual">단어장에 저장</button></div>
+      <p id="m-err" class="status err" hidden></p></details></section>`;
+  else body=vList();
+  return top()+`<h1>단어장</h1><p class="sub">기본 ${SEED_V.length}개 표현(5단계)에 내 표현을 더해 같은 방식으로 복습합니다. 표현을 누르면 예문과 설명이 열립니다.</p>${seg}${body}`;
+}
+function genButtons(act,label){const L=S.lib;
+  return `<div class="actions">${L.busy?'<button class="btn" data-act="stopgen">중지</button>':""}<button class="btn pri" data-act="${act}" ${L.busy?"disabled":""}>${L.busy?"작성 중":label}</button></div>
+  <p id="genmsg" class="status ${L.err?"err":""}" ${L.msg?"":"hidden"}>${esc(L.msg)}</p>`}
+function vPreview(){const L=S.lib,P=L.preview;
+  return `<section class="sheet"><ul class="plist">${P.items.map((x,i)=>P.kind==="vocab"
+    ?`<li><input type="checkbox" data-pv="${i}" ${x.on?"checked":""} aria-label="${esc(x.w)} 저장"><div><span class="w">${esc(x.w)}</span><span class="m">${esc(x.m)}</span></div><div class="s">${esc(x.s.replace(/[{}]/g,""))}</div><div class="t">${esc(x.tr)}</div>${x.ex?`<div class="t">${esc(x.ex)}</div>`:""}</li>`
+    :`<li><input type="checkbox" data-pv="${i}" ${x.on?"checked":""} aria-label="문항 ${i+1} 저장"><div class="s" style="grid-column:2">${esc(x.q.replace(/_{2,}/,"[ "+x.o[0]+" ]"))}</div><div class="t">${esc(x.pt)} — ${esc(x.ex)}</div></li>`).join("")}</ul></section>
+  <div class="actions"><button class="btn" data-act="discard">버리기</button><button class="btn pri" data-act="savepv">선택한 항목 저장</button></div>`}
+function vList(){
+  return `<input id="q" class="inp" placeholder="단어나 뜻으로 찾기" autocapitalize="off" style="margin-bottom:10px"><section class="sheet"><ul id="wl" class="wl">${listRows("")}</ul></section>
+  ${S.cards.grammar.length?`<p class="note">내가 추가한 문법 문항 ${S.cards.grammar.length}개 <button class="del" data-act="delgrammar">모두 삭제</button></p>`:""}`}
+function listRows(q){q=String(q||"").trim().toLowerCase();const P=S.progress.items;
+  const rows=allVocab().filter(x=>!q||x.w.toLowerCase().indexOf(q)>=0||String(x.m).toLowerCase().indexOf(q)>=0||String(x.tag||"").indexOf(q)>=0);
+  if(!rows.length)return `<li><span class="m">일치하는 표현이 없습니다. '직접 추가'에서 넣을 수 있습니다.</span></li>`;
+  return rows.map(x=>{const p=P["vocab|"+x.id],st=p?p.s:0,ps=parseS(x.s);
+    return `<li><details><summary><span class="w">${esc(x.w)}</span> <span class="stg" title="복습 단계 ${st}/7">${[1,2,3,4,5,6,7].map(n=>`<i class="${n<=st?"on":""}"></i>`).join("")}</span>
+      <div class="m">${esc(x.m)}${x.lv?" / "+x.lv+"단계":""}${x.tag?" / "+esc(x.tag):""}</div></summary>
+      <div class="ld">${ps?`<p class="en sm">${esc(ps.before)}<mark>${esc(ps.answer)}</mark>${esc(ps.after)}</p><p class="tr">${esc(x.tr)}</p>`:""}${detail(x)}
+      ${x.src==="seed"?"":`<button class="del" data-act="delcard" data-id="${esc(x.id)}">이 표현 삭제</button>`}</div></details></li>`}).join("")}
+
+/* 기록 */
+function vStats(){
+  const P=S.progress.items;let learned=0,solid=0;
+  Object.keys(P).forEach(k=>{if(P[k].s>=1)learned++;if(P[k].s>=4)solid++});
+  const agg={};Object.keys(S.progress.log).forEach(d=>{const m=S.progress.log[d].m||{};Object.keys(m).forEach(k=>{agg[k]=agg[k]||[0,0];agg[k][0]+=m[k][0];agg[k][1]+=m[k][1]})});
+  const st=S.progress.settings;
+  return top()+`<h1>기록</h1><p class="sub">${S.progress.lvl.cur?`현재 ${S.progress.lvl.cur}단계 ${LEVELS[S.progress.lvl.cur].name}. `:""}${cloud.status==="cloud"?"학습 기록이 내 Claude 계정에 저장되어 다른 기기에서도 이어집니다.":STANDALONE?"학습 기록은 이 기기에만 저장됩니다. 기기를 바꾸거나 브라우저 데이터를 지우기 전에 아래에서 백업해 두세요.":"학습 기록이 이 기기의 브라우저에만 저장되고 있습니다."}</p>
+  <section class="sheet kpis"><div class="kpi"><div class="v">${streak()}일</div><div class="k">연속 학습</div></div><div class="kpi"><div class="v">${learned}</div><div class="k">학습 중인 항목</div></div><div class="kpi"><div class="v">${solid}</div><div class="k">2주 이상 기억</div></div></section>
+  <h2>최근 14일</h2><section class="sheet">${bars()}</section>
+  <h2>모드별 정답률</h2><section class="sheet"><table class="tbl"><thead><tr><th>모드</th><th>푼 문제</th><th>정답률</th></tr></thead><tbody>
+  ${Object.keys(MODES).map(m=>{const a=agg[m]||[0,0];return `<tr><td>${MODES[m].name}</td><td>${a[0]}</td><td>${a[0]?Math.round(a[1]/a[0]*100)+"%":"-"}</td></tr>`}).join("")}</tbody></table></section>
+  <h2>설정</h2><section class="sheet">
+    <div class="setrow"><label for="set-size">한 번에 학습할 문제 수</label><select id="set-size" class="inp" data-set="size">${[5,10,15,20].map(n=>`<option value="${n}" ${+st.size===n?"selected":""}>${n}문제</option>`).join("")}</select></div>
+    <div class="setrow"><label for="set-rate">음성 속도</label><select id="set-rate" class="inp" data-set="rate">${[[.8,"느리게"],[1,"보통"],[1.15,"빠르게"]].map(r=>`<option value="${r[0]}" ${+st.rate===r[0]?"selected":""}>${r[1]}</option>`).join("")}</select></div>
+    <div class="setrow"><label for="set-auto">어휘 정답 확인 후 문장 자동 재생</label><select id="set-auto" class="inp" data-set="auto"><option value="1" ${st.auto?"selected":""}>켜기</option><option value="0" ${st.auto?"":"selected"}>끄기</option></select></div>
+    ${STANDALONE?`<div class="setrow"><span>기록·단어장 백업</span><span style="display:flex;gap:6px"><button class="btn sm" data-act="backup">파일로 저장</button><button class="btn sm" data-act="restore">불러오기</button></span></div>
+    <div class="setrow" style="display:block"><label for="apikey" style="display:block;margin-bottom:6px">AI 생성용 Gemini API 키 ${getKey()?"(저장됨)":""}</label>
+      <div style="display:flex;gap:6px"><input id="apikey" class="inp" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${getKey()?"새 키로 바꾸려면 입력":"Google AI Studio에서 발급한 키"}">
+      <button class="btn sm" data-act="savekey">저장</button>${getKey()?'<button class="btn sm danger" data-act="delkey">삭제</button>':""}</div>
+      <p class="note">키는 이 기기의 브라우저에만 저장되고 Google Gemini API로 직접 전송됩니다. 이 앱 전용으로 새로 발급한 키를 쓰세요.</p></div>`:""}
+    <div class="setrow"><span>레벨 테스트 다시 보기</span><button class="btn sm" data-act="starttest" data-kind="place">테스트</button></div>
+    <div class="setrow"><span>학습 기록과 단계 초기화 (단어장은 유지)</span><button class="btn sm danger" data-act="reset">${S.resetArm?"정말 초기화":"초기화"}</button></div>
+  </section>`;
+}
+
+/* ───────────── AI 생성 ───────────── */
+const AIERR={rate_limited:"요청이 많습니다. 잠시 후 다시 시도해 주세요.",session_expired:"로그인이 만료되었습니다. 다시 로그인해 주세요.",refused:"이 주제로는 만들 수 없습니다. 주제를 바꿔 보세요.",
+  invalid_json:"결과 형식이 올바르지 않았습니다. 다시 시도해 주세요.",empty_completion:"결과가 비어 있습니다. 주제를 더 구체적으로 적어 보세요.",upstream_error:"연결이 끊겼습니다. 다시 시도해 주세요.",bad_key:"API 키가 올바르지 않습니다. 기록 탭 설정에서 다시 입력해 주세요.",bad_model:"설정된 Gemini 모델을 찾을 수 없습니다. index.html의 AI_MODELS 값을 확인해 주세요.",bad_request:"요청이 거부되었습니다. 잠시 후 다시 시도해 주세요.",prompt_too_large:"입력이 너무 깁니다. 단어 수를 줄여 주세요."};
+const AIHIDE=["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"];
+const BASE="You write study material for a Korean business owner who develops, imports and distributes health functional foods (dietary supplements) and needs practical English for: product development with overseas manufacturers (formulation, dosage forms, raw materials, stability, OEM and private label), quality and specifications, regulatory and labeling matters, clinical evidence and health claims, and international trade (supplier emails, price negotiation, logistics, customs documents, payment, quality claims, contracts, meetings, trade shows). Vary the situations across these areas. Use natural, modern business English. Spell out numbers in words; no digits. Korean text must be natural Korean.\n";
+function vocabPrompt(topic,level,n,words){
+  const have=allVocab().map(x=>x.w).slice(0,260).join(", ");
+  return BASE+(words?`Make one card for EACH of these expressions, in this order (if a Korean meaning is given after '=', use it):\n${words.join("\n")}\n`
+    :`Topic: ${topic}\nDifficulty: step ${level} of 5. ${LEVELS[level].ai}\nMake ${n} cards of expressions that are genuinely useful for this topic at exactly this difficulty. Do not use any of these already-known expressions: ${have}\n`)
+  +`Reply with only a JSON array. Each element: {"word": the expression in base form (one word or a short phrase of at most four words), "pos": one of "n","v","adj","adv","phr", "meaning": concise Korean meaning, "sentence": one English sentence in which the target expression appears exactly once, wrapped in curly braces in the exact form used, e.g. "We will {dispatch} the goods tomorrow.", "translation": Korean translation of the sentence, "explain": two or three Korean sentences on nuance, register and when it is used in real business, including word family or grammar pattern if useful, "collocations": array of two or three {"en": common English collocation, "ko": Korean meaning}, "similar": one Korean sentence contrasting it with a similar or easily confused word, or "" if none}`;
+}
+function grammarPrompt(topic,level,n){
+  return BASE+`Topic: ${topic}\nDifficulty: step ${level} of 5. ${LEVELS[level].ai}\nMake ${n} four-option grammar questions built on realistic sentences for this topic. Each tests one grammar point Korean learners often get wrong (prepositions, tense, articles, countability, gerund vs infinitive, passive, conditionals, relative clauses, subject-verb agreement, word form). Exactly one option may be correct.\n`
+  +`Reply with only a JSON array. Each element: {"q": the sentence with the gap written as ___ (three underscores, exactly one gap), "options": four distinct strings with the CORRECT one first, "explain": one or two Korean sentences explaining why, "point": short Korean label of the grammar point}`;
+}
+async function runGen(kind,prompt,meta){
+  const L=S.lib;L.busy=true;L.err=false;L.count=0;L.msg=(STANDALONE?"Gemini가":"Claude가")+" 작성 중입니다. 보통 10~40초 걸립니다.";render();
+  AI.ctl=new AbortController();
+  try{
+    const out=await AI.sample.json(prompt,{signal:AI.ctl.signal,cache:false,onText:({text})=>{
+      const n=(text.match(kind==="vocab"?/"translation"\s*:/g:/"point"\s*:/g)||[]).length;
+      if(n!==L.count){L.count=n;const el=$("#genmsg");if(el){el.hidden=false;el.textContent=`${n}개 작성됨`}}}});
+    const items=kind==="vocab"?cleanVocab(out):cleanGrammar(out);
+    if(!items.length){L.msg="쓸 수 있는 결과가 없었습니다. 다시 시도해 주세요.";L.err=true}
+    else{L.preview={kind,items,lv:meta&&meta.lv||0,tag:meta&&meta.tag||""};L.msg=""}
+  }catch(e){
+    const code=e&&e.code;
+    if(code==="cancelled"){L.msg=""}
+    else if(AIHIDE.indexOf(code)>=0){AI.sample=null;L.msg=""}
+    else{L.msg=AIERR[code]||AIERR.upstream_error;L.err=true}
+  }finally{L.busy=false;AI.ctl=null;render()}
+}
+function cleanVocab(out){
+  if(!Array.isArray(out))return[];const have=new Set(allVocab().map(x=>norm(x.w))),res=[];
+  for(const x of out){if(!x||typeof x!=="object")continue;
+    const w=String(x.word||"").trim().slice(0,60),m=String(x.meaning||"").trim().slice(0,80),s=String(x.sentence||"").trim().slice(0,240),tr=String(x.translation||"").trim().slice(0,240);
+    if(!w||!m||!tr)continue;if((s.match(/\{/g)||[]).length!==1)continue;const p=parseS(s);if(!p||!p.answer.trim()||p.answer.length>40)continue;
+    if(have.has(norm(w)))continue;have.add(norm(w));
+    const co=Array.isArray(x.collocations)?x.collocations.filter(k=>k&&k.en&&k.ko).slice(0,3).map(k=>[String(k.en).slice(0,60),String(k.ko).slice(0,60)]):[];
+    res.push({w,pos:POS[x.pos]?x.pos:"phr",m,s,tr,ex:String(x.explain||"").trim().slice(0,400),co,cf:String(x.similar||"").trim().slice(0,200),on:true});if(res.length>=20)break}
+  return res;
+}
+function cleanGrammar(out){
+  if(!Array.isArray(out))return[];const res=[];
+  for(const x of out){if(!x||typeof x!=="object")continue;
+    const q=String(x.q||"").trim().slice(0,240);if((q.match(/_{2,}/g)||[]).length!==1)continue;
+    const o=Array.isArray(x.options)?x.options.map(t=>String(t).trim().slice(0,60)).filter(Boolean):[];
+    if(o.length!==4||new Set(o.map(t=>t.toLowerCase())).size!==4)continue;
+    const ex=String(x.explain||"").trim().slice(0,300);if(!ex)continue;
+    res.push({q,o,ex,pt:String(x.point||"문법").trim().slice(0,20),on:true});if(res.length>=12)break}
+  return res;
+}
+/* ───────────── 레벨 테스트 ───────────── */
+function testQs(lv,n){
+  const poolL=SEED_V.filter(x=>x.lv===lv),picks=shuffle(poolL).slice(0,n);
+  return picks.map((it,i)=>{const p=parseS(it.s),others=shuffle(poolL.filter(x=>x.id!==it.id));
+    if(i%2===0){const o=[it.m];for(const x of others){if(o.length<4&&o.indexOf(x.m)<0)o.push(x.m)}
+      return{id:it.id,type:"meaning",p,tr:"",opts:shuffle(o.map((t,k)=>({t,ok:k===0})))}}
+    const cap=/^[A-Z]/.test(p.answer)&&p.before==="",o=[p.answer];
+    for(const x of others.filter(y=>y.pos===it.pos).concat(others.filter(y=>y.pos!==it.pos))){let a=parseS(x.s).answer;a=(cap?a.charAt(0).toUpperCase():a.charAt(0).toLowerCase())+a.slice(1);
+      if(o.length<4&&!o.some(z=>z.toLowerCase()===a.toLowerCase()))o.push(a)}
+    return{id:it.id,type:"blank",p,tr:it.tr,opts:shuffle(o.map((t,k)=>({t,ok:k===0})))}});
+}
+function startTest(kind){
+  const lv=kind==="place"?1:S.progress.lvl.cur;
+  S.test={kind,lv,qs:testQs(lv,kind==="place"?4:10),idx:0,right:0,hist:[],missed:[],done:false,result:0,pass:false};
+  S.session=null;S.view="test";render();window.scrollTo(0,0);
+}
+function answerTest(i){
+  const T=S.test,q=T.qs[T.idx];if(!q||T.done)return;
+  if(i>=0&&q.opts[i]&&q.opts[i].ok)T.right++;else T.missed.push(q.id);
+  T.idx++;
+  if(T.idx>=T.qs.length){
+    if(T.kind==="place"){
+      const passed=T.right>=3;T.hist.push({lv:T.lv,right:T.right,total:T.qs.length});
+      if(passed&&T.lv<5){T.lv++;T.qs=testQs(T.lv,4);T.idx=0;T.right=0}
+      else{T.done=true;T.result=T.lv;S.progress.lvl={cur:T.lv,sel:T.lv};save("progress")}
+    }else{
+      T.done=true;T.pass=T.right>=8;
+      if(T.pass&&S.progress.lvl.cur<5){S.progress.lvl.cur++;S.progress.lvl.sel=S.progress.lvl.cur;save("progress")}
+    }
+  }
+  render();
+}
+function vTest(){
+  const T=S.test;
+  if(T.done){
+    if(T.kind==="place")return `<div class="sbar"><div class="prog"><i style="width:100%"></i></div></div>
+      <section class="sheet res"><span class="lab">레벨 테스트 결과</span><div class="big">${T.result}단계 ${LEVELS[T.result].name}</div><p class="tr">${LEVELS[T.result].desc}</p>
+      <table class="tbl" style="margin-top:14px"><thead><tr><th>단계</th><th>맞힌 문제</th><th>결과</th></tr></thead><tbody>${T.hist.map(h=>`<tr><td>${h.lv}단계</td><td>${h.right} / ${h.total}</td><td>${h.right>=3?"통과":"여기서 시작"}</td></tr>`).join("")}</tbody></table>
+      <p class="note">아래 단계의 표현도 홈 화면의 단계 버튼을 눌러 언제든 학습할 수 있습니다.</p></section>
+      <div class="actions"><button class="btn pri" data-act="home">학습 시작</button></div>`;
+    const missed=T.missed.map(id=>SEED_V.find(x=>x.id===id)).filter(Boolean);
+    return `<div class="sbar"><div class="prog"><i style="width:100%"></i></div></div>
+      <section class="sheet res ${T.pass?"":"bad"}"><span class="lab">승급 테스트 결과</span><div class="big">${T.right} / ${T.qs.length}</div>
+      <p class="tr">${T.pass?`통과했습니다. ${S.progress.lvl.cur}단계가 열렸습니다.`:"8문제 이상 맞혀야 통과합니다. 이 단계를 조금 더 학습한 뒤 다시 도전해 보세요."}</p>
+      ${missed.length?`<ul class="missed">${missed.map(x=>`<li><span>${esc(x.w)}</span>${esc(x.m)}</li>`).join("")}</ul>`:""}</section>
+      <div class="actions"><button class="btn pri" data-act="home">${T.pass?"새 단계 학습 시작":"처음으로"}</button></div>`;
+  }
+  const q=T.qs[T.idx],total=T.kind==="place"?20:T.qs.length,done=T.kind==="place"?(T.lv-1)*4+T.idx:T.idx;
+  const head=`<div class="sbar"><button class="x" data-act="quittest">그만하기</button><div class="prog"><i style="width:${Math.round(done/total*100)}%"></i></div><span class="n">${T.lv}단계 ${T.idx+1} / ${T.qs.length}</span></div>`;
+  const body=q.type==="meaning"
+    ?`<span class="lab">밑줄 친 표현의 뜻을 고르세요</span><p class="en">${esc(q.p.before)}<u class="tw">${esc(q.p.answer)}</u>${esc(q.p.after)}</p>`
+    :`<span class="lab">빈칸에 들어갈 표현을 고르세요</span><p class="en">${esc(q.p.before)}<span class="blank" style="display:inline-block;min-width:6ch">&nbsp;</span>${esc(q.p.after)}</p><p class="tr">${esc(q.tr)}</p>`;
+  return head+`<section class="sheet card">${body}<div class="opts">${q.opts.map((o,i)=>`<button class="opt ${q.type==="meaning"?"ko":""}" data-act="tans" data-i="${i}">${esc(o.t)}</button>`).join("")}</div></section>
+    <div class="actions"><button class="btn" data-act="tans" data-i="-1">모르겠어요</button></div>`;
+}
+let uidN=0;function newId(p){return p+Date.now().toString(36)+(uidN++).toString(36)}
+
+/* ───────────── 동작 ───────────── */
+function checkVocab(giveup){
+  const c=S.session.card;const a=$("#ans");c.typed=a?a.value.trim():"";
+  if(giveup||!c.typed){if(!giveup&&!c.typed){if(a)a.focus();return}c.typed=giveup?"":c.typed;return finishCard("again")}
+  const t=norm(c.p.answer),u=norm(c.typed);
+  if(t===u)return finishCard(c.hint?"hard":"good");
+  if(t.length>=6&&lev(t,u)<=1){c.near=true;return finishCard("hard")}
+  finishCard("again");
+}
+function checkListen(giveup){
+  const c=S.session.card;if(giveup)return finishCard("again");
+  if(!c.built.length){toast("단어를 눌러 문장을 만들어 주세요");return}
+  const mine=c.built.map(i=>c.bank[i].t.toLowerCase()).join(" "),tg=c.target.map(t=>t.toLowerCase()).join(" ");
+  finishCard(mine===tg?"good":"again");
+}
+function startMic(){
+  const c=S.session.card;if(!SRClass||c.state==="listening")return;
+  if(TTS.ok)try{speechSynthesis.cancel()}catch(e){}
+  try{
+    rec=new SRClass();rec.lang="en-US";rec.interimResults=false;rec.maxAlternatives=3;
+    const target=spTokens(c.full);let got=false;
+    rec.onresult=ev=>{got=true;let best=-1,bt="",bf=null;const r=ev.results[0];
+      if(!r||!r.length)return;
+      for(let i=0;i<r.length;i++){const h=spTokens(r[i].transcript),f=lcsFlags(target,h),sc=Math.round(f.filter(Boolean).length/target.length*100);if(sc>best){best=sc;bt=r[i].transcript;bf=f}}
+      const words=c.full.split(/\s+/),tf=[];let ti=0;
+      for(const w of words){const n=spTokens(w).length;let ok=true;for(let k=0;k<n;k++){if(!bf[ti+k])ok=false}ti+=n;tf.push(n?ok:true)}
+      if(c.best==null||best>=c.best){c.best=best;c.heard=bt;c.flags=tf}c.msg=""};
+    rec.onerror=ev=>{const e=ev.error;
+      if(e==="not-allowed"||e==="service-not-allowed"||e==="audio-capture"){srBlocked=true;c.msg=""}
+      else if(e==="no-speech"){c.msg="소리가 들리지 않았습니다. 다시 시도해 주세요."}
+      else if(e!=="aborted"){c.msg="음성을 인식하지 못했습니다. 다시 시도해 주세요."}};
+    rec.onend=()=>{rec=null;if(S.view==="session"&&S.session.card===c){c.state="idle";if(!got&&!c.msg&&!srBlocked&&c.best==null)c.msg="인식된 내용이 없습니다. 다시 시도해 주세요.";render()}};
+    c.state="listening";c.msg="";render();rec.start();
+  }catch(e){srBlocked=true;c.state="idle";render()}
+}
+function readLibInputs(){const L=S.lib,lv=$("#level"),kd=$("#kind");if(lv)L.level=+lv.value;if(kd)L.kind=kd.value}
+
+const ACT={
+  backup(){try{const blob=new Blob([JSON.stringify({app:"tonggwa",v:1,at:new Date().toISOString(),progress:S.progress,cards:S.cards})],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="tonggwa-backup-"+dkey()+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast("백업 파일을 저장했습니다")}catch(e){toast("백업 파일을 만들지 못했습니다")}},
+  restore(){const f=document.createElement("input");f.type="file";f.accept="application/json,.json";
+    f.onchange=()=>{const file=f.files&&f.files[0];if(!file)return;const rd=new FileReader();
+      rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d||d.app!=="tonggwa"||!d.progress)throw 0;
+        S.progress=normProgress(d.progress);S.cards=normCards(d.cards);save("progress");save("cards");render();toast("백업을 불러왔습니다")}catch(e){toast("이 앱의 백업 파일이 아닙니다")}};
+      rd.readAsText(file)};f.click()},
+  savekey(){const el=$("#apikey"),k=el?el.value.trim():"";if(k.length<20||/\s/.test(k)){toast("Gemini API 키를 정확히 붙여 넣어 주세요");return}
+    try{localStorage.setItem(LS_KEY,k)}catch(e){toast("이 브라우저에서는 키를 저장할 수 없습니다");return}refreshDirectAI();render();toast("API 키를 저장했습니다")},
+  delkey(){try{localStorage.removeItem(LS_KEY)}catch(e){}refreshDirectAI();render();toast("API 키를 삭제했습니다")},
+  starttest(b){startTest(b.dataset.kind)},
+  skiptest(){S.progress.lvl={cur:1,sel:1};save("progress");render()},
+  tans(b){answerTest(+b.dataset.i)},
+  quittest(){S.test=null;S.view="home";render()},
+  sellv(b){const n=+b.dataset.lv;if(n>=1&&n<=S.progress.lvl.cur){S.progress.lvl.sel=n;save("progress");render()}},
+  learn(){const c=S.session.card;c.phase="ask";render()},
+  sayword(){const it=findItem("vocab",S.session.card.id);if(it)say(it.w)},
+  start(b){startSession(b.dataset.mode,!!b.dataset.extra)},
+  home(){S.session=null;S.test=null;S.view="home";render();window.scrollTo(0,0)},
+  quit(){if(rec){try{rec.abort()}catch(e){}}if(TTS.ok)try{speechSynthesis.cancel()}catch(e){};
+    if(S.session&&Object.keys(S.session.first).length){S.view="result"}else{S.session=null;S.view="home"}render()},
+  next(){nextCard()},
+  say(){say(S.session.card.full)},
+  play(){say(S.session.card.full)},
+  slow(){say(S.session.card.full,.65)},
+  hint(){const c=S.session.card;const len=c.p.answer.replace(/ /g,"").length;c.hint=Math.min(c.hint+1,Math.max(1,len-1));const h=$("#hint");h.hidden=false;h.textContent=hintText(c.p.answer,c.hint);const a=$("#ans");if(a)a.focus()},
+  giveup(){S.session.mode==="vocab"?checkVocab(true):checkListen(true)},
+  check(){S.session.mode==="vocab"?checkVocab(false):checkListen(false)},
+  chip(b){const c=S.session.card,i=+b.dataset.i;if(c.bank[i].used)return;c.bank[i].used=true;c.built.push(i);drawChips()},
+  unchip(b){const c=S.session.card,pos=+b.dataset.pos,i=c.built[pos];c.built.splice(pos,1);c.bank[i].used=false;drawChips()},
+  opt(b){const c=S.session.card;c.pick=+b.dataset.i;finishCard(c.opts[c.pick].ok?"good":"again")},
+  mic(){startMic()},
+  mask(){const c=S.session.card;c.mask=!c.mask;render()},
+  self(b){finishCard(b.dataset.res)},
+  spknext(){const c=S.session.card;if(c.best==null)return nextCard();finishCard(c.best>=80?"good":c.best>=60?"hard":"again")},
+  libtab(b){readLibInputs();S.lib.tab=b.dataset.tab;S.lib.msg="";S.lib.err=false;render()},
+  topic(b){S.lib.topic=b.dataset.t;document.querySelectorAll(".tp").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"))},
+  gen(){if(!AI.sample||S.lib.busy)return;readLibInputs();const L=S.lib,ct=($("#customTopic")||{}).value||"";const topic=(ct.trim()||L.topic).slice(0,80);
+    if(L.kind==="vocab"&&S.cards.vocab.length>=MAX_VOCAB){L.msg=`내 표현은 ${MAX_VOCAB}개까지 저장할 수 있습니다. 목록에서 일부를 삭제해 주세요.`;L.err=true;return render()}
+    const lv=L.level||curSel();runGen(L.kind,L.kind==="vocab"?vocabPrompt(topic,lv,8):grammarPrompt(topic,lv,6),{lv,tag:topic})},
+  genmine(){if(!AI.sample||S.lib.busy)return;const L=S.lib,raw=($("#words")||{}).value||"";
+    const words=raw.split("\n").map(s=>s.trim().slice(0,80)).filter(Boolean).slice(0,15);
+    if(!words.length){L.msg="단어를 한 줄에 하나씩 입력해 주세요.";L.err=true;return render()}
+    runGen("vocab",vocabPrompt("",0,words.length,words),{lv:0,tag:"내 표현"})},
+  stopgen(){if(AI.ctl)AI.ctl.abort()},
+  discard(){S.lib.preview=null;render()},
+  savepv(){const P=S.lib.preview,pick=P.items.filter(x=>x.on);if(!pick.length){toast("저장할 항목을 선택해 주세요");return}
+    if(P.kind==="vocab"){const room=MAX_VOCAB-S.cards.vocab.length;pick.slice(0,room).forEach(x=>S.cards.vocab.unshift({id:newId("u"),w:x.w,pos:x.pos,m:x.m,s:x.s,tr:x.tr,ex:x.ex||"",co:x.co||[],cf:x.cf||"",lv:P.lv||0,tag:P.tag||"내 표현",src:"user"}))}
+    else{const room=MAX_GRAMMAR-S.cards.grammar.length;pick.slice(0,room).forEach(x=>S.cards.grammar.unshift({id:newId("h"),q:x.q,o:x.o,ex:x.ex,pt:x.pt,src:"user"}))}
+    save("cards");S.lib.preview=null;S.lib.tab=P.kind==="vocab"?"list":S.lib.tab;render();toast(`${pick.length}개를 단어장에 저장했습니다`)},
+  addmanual(){const w=$("#m-w").value.trim(),m=$("#m-m").value.trim(),s=$("#m-s").value.trim(),t=$("#m-t").value.trim(),er=$("#m-err");
+    const fail=msg=>{er.hidden=false;er.textContent=msg};
+    if(!w||!m||!s||!t)return fail("네 칸을 모두 입력해 주세요.");
+    if(S.cards.vocab.length>=MAX_VOCAB)return fail(`내 표현은 ${MAX_VOCAB}개까지 저장할 수 있습니다.`);
+    const idx=s.toLowerCase().indexOf(w.toLowerCase());if(idx<0)return fail("예문 안에 단어가 그대로 들어 있어야 합니다. 활용형(예: shipped)을 썼다면 단어 칸에도 그 형태로 적어 주세요.");
+    const sent=s.slice(0,idx)+"{"+s.slice(idx,idx+w.length)+"}"+s.slice(idx+w.length);
+    S.cards.vocab.unshift({id:newId("u"),w:w.slice(0,60),pos:"phr",m:m.slice(0,80),s:sent.slice(0,240),tr:t.slice(0,240),tag:"내 표현",src:"user"});
+    save("cards");S.lib.tab="list";render();toast("단어장에 저장했습니다")},
+  delcard(b){const id=b.dataset.id;S.cards.vocab=S.cards.vocab.filter(x=>x.id!==id);["vocab","listen","speak"].forEach(m=>delete S.progress.items[m+"|"+id]);save("cards");save("progress");
+    const q=$("#q");$("#wl").innerHTML=listRows(q?q.value:"")},
+  delgrammar(){S.cards.grammar.forEach(x=>delete S.progress.items["grammar|"+x.id]);S.cards.grammar=[];save("cards");save("progress");render();toast("추가한 문법 문항을 삭제했습니다")},
+  reset(){if(!S.resetArm){S.resetArm=true;render();setTimeout(()=>{if(S.resetArm){S.resetArm=false;if(S.view==="stats")render()}},4000);return}
+    S.resetArm=false;S.progress.items={};S.progress.log={};S.progress.lvl={cur:0,sel:0};save("progress");render();toast("학습 기록을 초기화했습니다")}
+};
+document.addEventListener("click",e=>{
+  const n=e.target.closest("[data-nav]");if(n){readLibInputs();S.view=n.dataset.nav;S.session=null;S.test=null;S.resetArm=false;render();window.scrollTo(0,0);return}
+  const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const f=ACT[b.dataset.act];if(f)f(b);
+});
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.pv!=null&&S.lib.preview){S.lib.preview.items[+t.dataset.pv].on=t.checked;return}
+  if(t.dataset&&t.dataset.set){const k=t.dataset.set;S.progress.settings[k]=k==="auto"?t.value==="1":+t.value;save("progress")}
+});
+document.addEventListener("input",e=>{
+  if(e.target.id==="q"){$("#wl").innerHTML=listRows(e.target.value)}
+  if(e.target.id==="ans"&&S.session&&S.session.card)S.session.card.typed=e.target.value;
+});
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Enter"||e.isComposing||S.view!=="session"||!S.session.card)return;
+  const c=S.session.card;
+  if(c.phase==="ask"&&S.session.mode==="vocab"&&e.target.id==="ans"){e.preventDefault();checkVocab(false)}
+  else if(c.phase==="done"&&e.target.tagName!=="BUTTON"){e.preventDefault();nextCard()}
+});
+
+render();
+initRuntime();
+})();
+</script>
+</body>
+</html>
