@@ -192,6 +192,14 @@ details.manual summary{font-weight:600;cursor:pointer;padding:6px 0}
 .setrow:first-child{border-top:0}
 .setrow select{width:auto;min-width:110px}
 
+.chip.inbank{border-style:dashed;border-color:var(--cobalt);color:var(--cobalt);font-family:var(--ui);font-size:15px;font-weight:600}
+.chip.inchip{display:inline-flex;align-items:center;gap:4px;padding:3px 4px 3px 8px;background:var(--cobalt-soft);border-color:var(--cobalt)}
+.chip.inchip input{font-family:var(--en);font-size:18px;border:0;border-bottom:2px solid var(--cobalt);background:transparent;padding:2px 2px;min-width:8ch;max-width:60vw;color:inherit}
+.chip.inchip input:focus{outline:none}
+.chip.inchip .rm{border:0;background:none;font-size:18px;line-height:1;padding:6px 8px;color:var(--ink2)}
+.mine{margin:2px 0 6px}
+.need{color:var(--hold);font-family:var(--en);font-size:17px;font-weight:600}
+.lab+.en.sm{margin-top:2px}
 /* levels */
 .lvl{padding:14px}
 .lvrow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
@@ -407,7 +415,122 @@ const G = [
 ["Not only ___ late, but it was also damaged.",["did the shipment arrive","the shipment arrived","arrived the shipment","the shipment did arrive"],"Not only가 문장 앞에 오면 의문문처럼 '조동사 + 주어 + 동사'로 도치됩니다.","도치",5],
 ["The supplier denied ___ the formula without notice.",["changing","to change","change","to changing"],"deny 뒤에는 동명사가 옵니다. '~한 것을 부인하다'.","동명사",5]
 ];
-const SEED_V = V.map((a,i)=>({id:"v"+(i+1),w:a[0],pos:a[1],m:a[2],s:a[3],tr:a[4],tag:a[5],lv:a[6],ex:a[7],co:parseCo(a[8]),cf:a[9]||"",src:"seed"}));
+/* 예문별 문장 구조 설명 (V 배열과 같은 순서) */
+const PAT = [
+"Could you + 동사원형 ~? 은 정중한 요청입니다. send + 받는 사람(us) + 물건 순서로 쓰고, 기한은 문장 끝에 by + 시점으로 둡니다.",
+"What is + 주어 ~? 의문문입니다. for an order of this size처럼 조건은 for + 명사구로 뒤에 붙입니다.",
+"Is + 주어 + 상태 ~? 두 개를 or로 이은 선택 의문문입니다. made to order는 '주문 생산되는'이라는 굳어진 표현입니다.",
+"once + 주어 + 동사는 '~하는 대로'입니다. 미래의 일이어도 once 절 안은 현재시제(is confirmed)를 씁니다.",
+"Please + 동사원형의 요청문입니다. before + 주어 + 동사로 '~하기 전에'를 뒤에 붙입니다.",
+"would like to + 동사원형은 want to보다 정중한 '~하고 싶습니다'입니다. 시간 표현(next month)은 문장 끝에 옵니다.",
+"the A of B 구조(B의 A)입니다. 영어는 핵심 명사(availability)를 먼저 말하고 of 뒤에 대상을 붙입니다.",
+"so (that) + 주어 + can ~ 은 '~할 수 있도록'이라는 목적을 나타냅니다.",
+"would like to + 동사원형. negotiate 뒤에 바로 협상 대상(the unit price)이 오고, 조건은 for + 명사로 붙입니다.",
+"Can you ~ if + 주어 + 동사: 조건을 걸고 요청하는 문형입니다. if 절은 현재시제를 씁니다.",
+"compared with + 비교 대상은 '~와 비교해'입니다. 형용사(competitive) 뒤에 붙여 비교 기준을 밝힙니다.",
+"At this price처럼 조건을 문장 앞에 두고 쉼표를 찍습니다. would be는 '그렇게 된다면 ~일 것이다'라는 가정의 어감입니다.",
+"Thank you for + 명사. 세미콜론으로 두 문장을 잇고, here is + 명사는 무언가를 제시할 때 씁니다.",
+"room to + 동사원형은 '~할 여지'입니다. is there ~? 는 '~이 있나요?'입니다.",
+"주어 + 과거형 동사 + 목적어 + 시간의 기본 어순입니다. fuel surcharge처럼 명사 두 개를 나란히 써서 하나의 명사를 만듭니다.",
+"give + 받는 사람(us) + 물건 순서입니다. for each item은 '품목별로'입니다.",
+"be scheduled to + 동사원형은 '~할 예정이다'입니다. leave 뒤에는 전치사 없이 바로 출발지를 씁니다.",
+"Does + 주어 + 동사원형 ~? 일반동사 의문문입니다. 목적지는 to + 장소로 붙입니다.",
+"contact 뒤에는 전치사 없이 바로 사람이 옵니다. to + 동사원형은 '~하기 위해'라는 목적입니다.",
+"apologize for + 명사. caused by ~ 는 앞의 명사(delay)를 뒤에서 꾸며 '~로 인한'이라는 뜻을 더합니다.",
+"as soon as + 주어 + 동사는 '~하자마자'입니다. 미래의 일이어도 현재시제(is received)를 씁니다.",
+"once + 주어 + 현재시제는 '~하면 바로'입니다. ship은 '출고되다'라는 자동사로도 씁니다.",
+"consolidate A into B: A를 B로 합치다. both + 복수명사는 '둘 다'입니다.",
+"each 뒤에는 단수 명사와 단수 동사(holds)가 옵니다. hold는 '담다, 수용하다'입니다.",
+"take + 시간은 '(시간이) 걸리다'입니다. usually 같은 빈도부사는 일반동사 앞에 둡니다.",
+"email을 동사로 써서 '이메일로 보내다'입니다. a copy of + 문서는 '~의 사본'입니다.",
+"주어가 The value on the commercial invoice 전체로 깁니다. must + 동사원형은 '반드시 ~해야 한다'입니다.",
+"every 뒤에는 단수 명사가 옵니다. for every batch는 '배치마다'입니다.",
+"list A as B: A를 B로 기재하다. 서류 위에 적는 것이므로 on the documents를 씁니다.",
+"'~에 대한 관세'는 tariff on ~ 으로 전치사 on을 씁니다. 주어가 길어도 동사는 핵심 명사(tariff, 단수)에 맞춰 is입니다.",
+"comply는 항상 with와 함께 씁니다. must + 동사원형.",
+"declare + 신고 내용 + to + 신고 대상의 순서입니다.",
+"after + 명사는 '~ 후에'입니다. 미래의 약속은 will + 동사원형으로 씁니다.",
+"수치는 명사 앞에서 형용사처럼 씁니다(a thirty percent deposit). before + 명사는 '~ 전에'입니다.",
+"be due는 '지급 기한이 되다'입니다. before shipment는 관사 없이 쓰는 굳은 표현입니다.",
+"기간 + overdue 순서로 '~만큼 연체된'을 나타냅니다. now는 be동사 뒤에 둡니다.",
+"결제 수단은 by + 수단(관사 없음)으로 말합니다. 조건(For the first order)을 앞에 두고 쉼표를 찍습니다.",
+"discuss 뒤에는 about 없이 바로 목적어가 옵니다. more + 형용사는 비교급입니다.",
+"wire + 돈 + 시간의 어순입니다. 받는 곳을 말하려면 to + 계좌/사람을 붙입니다.",
+"since + 과거 시점과 함께 현재완료(has moved)를 씁니다. '~ 이후로 지금까지'라는 뜻입니다.",
+"percent of + 복수명사가 주어이면 동사도 복수(were)입니다. About은 '약'입니다.",
+"Which + 명사 + did + 주어 + 동사원형 ~? 전치사 from은 문장 끝에 남습니다.",
+"at least는 '최소한'입니다. 기간 + of + 명사로 '~만큼의 …'를 나타내고, on arrival은 '도착 시점에'입니다.",
+"plan to + 동사원형. compensate + 사람 + for + 손실의 순서를 기억하세요.",
+"운송 수단은 by air, by sea처럼 관사 없이 씁니다. at your cost는 '귀사 비용 부담으로'입니다.",
+"when 절에서는 미래의 일도 현재시제(arrive)로 씁니다. arrive at + 장소.",
+"have to + 동사원형은 '~해야 한다'입니다. file a claim for + 손해 내용.",
+"tell + 사람 + 내용 순서입니다. 두 개의 목적어를 and로 연결했습니다.",
+"ask for + 명사는 '~을 요청하다'입니다. 현재진행형(are asking)으로 쓰면 어감이 부드러워집니다.",
+"계약서에서 may는 '~할 수 있다(권리)'입니다. with + 기간 + notice는 '~ 전 통지로'이고, days' 의 소유격 아포스트로피에 주의하세요.",
+"for + 기간. another + 수 + 복수명사는 '추가로 ~ 더'입니다.",
+"explain 뒤에는 바로 설명할 대상이 옵니다(explain about은 틀린 표현). in section seven으로 위치를 밝힙니다.",
+"be limited to + 명사는 '~로 제한되다'입니다. supplier's는 소유격입니다.",
+"부사(legally)가 형용사(binding) 앞에서 꾸밉니다. not은 be동사 바로 뒤에 둡니다.",
+"I am writing to + 동사원형은 메일 첫 문장의 정석입니다. follow up on + 대상.",
+"find + 목적어 + attached는 '~이 첨부되어 있음을 확인하세요'라는 굳은 문형입니다. signed는 contract를 꾸미는 과거분사입니다.",
+"clarify 뒤에 what 절(무엇이 ~인지)이 목적어로 옵니다. 간접의문문이라 what + 동사의 평서문 어순입니다.",
+"postpone A until B: A를 B까지 미루다. 요일 앞에는 관사가 없습니다.",
+"주어 + will + 동사 + 목적어 + before + 명사의 기본 어순입니다.",
+"Let me + 동사원형은 '제가 ~하겠습니다'입니다. check with + 사람은 '~에게 확인하다'이고, 두 동사를 and로 연결했습니다.",
+"per + 단수명사는 '~당'입니다. What is + 주어? 의 기본 의문문입니다.",
+"수단은 by email(관사 없음), 시간은 문장 끝에 둡니다. sent는 send의 과거형입니다.",
+"send + 받는 사람 + 물건 순서입니다. 형용사(free)는 명사 앞에 둡니다.",
+"Please + 동사원형 + 목적어. delivery date처럼 명사 두 개를 이어 하나의 명사로 씁니다.",
+"can + 동사원형. goods(물품)는 항상 복수형으로 씁니다.",
+"과거 시점(yesterday)이 있으므로 과거형 received를 씁니다. 시간은 문장 끝에 둡니다.",
+"주어 + be동사 + 형용사 + in + 지역의 기본 문형입니다.",
+"send + 받는 사람(us) + 물건(the label design) 순서입니다.",
+"the A of B: B의 A. 핵심 명사를 먼저 말합니다.",
+"명령문은 동사원형으로 시작합니다. a day는 '하루에', with water는 '물과 함께'입니다.",
+"be easy to + 동사원형: ~하기 쉽다.",
+"look for는 '~을 찾다'입니다. 현재진행형(are looking)으로 지금 진행 중임을 나타냅니다.",
+"be attached는 '첨부되어 있다'라는 수동태입니다.",
+"과거 의문문은 Did + 주어 + 동사원형입니다. receive는 원형으로 돌아갑니다.",
+"be available for + 명사: ~할 시간이 되다.",
+"Thank you for + 명사. 형용사 quick이 명사 reply를 꾸밉니다.",
+"recommended(권장되는)가 과거분사로 명사를 꾸밉니다. a day는 '하루에'입니다.",
+"Which + 명사가 주어인 의문문은 do/does 없이 바로 동사(sells)가 옵니다. sell은 '팔리다'라는 뜻으로도 씁니다.",
+"change A to B: A를 B로 바꾸다. smaller는 small의 비교급입니다.",
+"be printed on ~ 은 '~에 인쇄되어 있다'라는 수동태입니다. on the bottom of ~ 는 '~의 바닥에'입니다.",
+"adjust A for B: B에 맞게 A를 조정하다.",
+"주어는 The price(단수)이고 of 이하가 꾸밉니다. went up은 go up(오르다)의 과거형입니다.",
+"must be + 형용사. 수치 + pure로 '순도 ~'를 표현합니다.",
+"to + 동사원형은 '~하기 위해'입니다. set the shelf life는 '유통기한을 설정하다'입니다.",
+"Which + 명사 + do you + 동사 ~? 뒤에 쉼표를 찍고 선택지를 A or B로 붙입니다.",
+"Do you offer ~? 는 서비스 제공 여부를 묻는 기본 문형입니다. 대상은 for + 명사로 붙입니다.",
+"주어 This form of magnesium은 단수이므로 has를 씁니다. higher는 비교급이며 than 이하는 생략되었습니다.",
+"be supported by ~ 는 '~로 뒷받침되다'라는 수동태입니다. 시험 대상은 in + 대상 집단으로 씁니다.",
+"Which + 명사가 주어이므로 바로 is allowed(수동태)가 옵니다. be allowed for ~ 는 '~에 허용되다'입니다.",
+"used in ~ 이 앞의 명사(excipient)를 뒤에서 꾸밉니다. every 뒤에는 단수명사가 옵니다.",
+"be standardized to + 함량 + 성분. 전치사 to를 쓰는 점에 주의하세요.",
+"data on ~ 은 '~에 관한 자료'입니다. the efficacy of this dose는 the A of B 구조입니다.",
+"until + 시점은 '~까지 계속'입니다. its는 앞의 the probiotic을 받는 소유격입니다.",
+"구동사 scale up + 목적어. after + 명사.",
+"depend on + 명사: ~에 달려 있다. 주어가 단수라 depends입니다.",
+"require + 명사: ~을 요구하다. testing for ~ 는 '~에 대한 시험'입니다.",
+"계약서의 shall은 '~하여야 한다(의무)'입니다. indemnify A against B 구조로 씁니다.",
+"cite는 '(근거로) 들다, 원용하다'입니다. after + 명사구로 시점을 붙입니다.",
+"be made는 '(제안이) 이루어지다'입니다. without prejudice to + 명사는 '~을 해하지 않고'입니다.",
+"substantiate A with B: B로 A를 입증하다. published가 studies를 꾸밉니다.",
+"Notwithstanding + 명사를 문장 앞에 두고 쉼표를 찍습니다. either party + may + 동사원형은 계약서의 권리 조항 문형입니다.",
+"shall be + 과거분사는 계약서의 의무 수동태입니다. 수단은 by + 명사(관사 없음)로 씁니다.",
+"agree to + 동사원형: ~하기로 합의하다. 방식을 나타내는 in good faith는 문장 끝에 둡니다.",
+"belong to + 소유자: ~에게 속하다. 주어가 셀 수 없는 명사라 단수 동사 belongs를 씁니다.",
+"be based on ~: ~에 근거하다. a study of + 기간으로 연구 기간을 나타냅니다.",
+"A is a breach of B: A는 B의 위반이다. Late delivery는 관사 없이 일반 개념으로 씁니다.",
+"agree to + 동사원형의 과거형입니다. waive 뒤에 면제하는 요금이나 권리가 바로 옵니다.",
+"as part of ~: ~의 일환으로. visit 뒤에는 전치사 없이 장소가 옵니다.",
+"concession on ~, flexibility on ~ 처럼 전치사 on으로 '~에 대한'을 나타냅니다. so로 결과를 연결합니다.",
+"leverage A to + 동사원형: A를 활용해 ~하다. grow를 '키우다'라는 타동사로 썼습니다.",
+"because + 주어 + 동사로 이유를 붙입니다. Customs(세관)는 관사 없이 주어로 씁니다.",
+"survive + 명사는 '~ 이후에도 존속하다'라는 계약서 표현입니다. 전치사 없이 바로 목적어가 옵니다."
+];
+const SEED_V = V.map((a,i)=>({pn:PAT[i]||"",id:"v"+(i+1),w:a[0],pos:a[1],m:a[2],s:a[3],tr:a[4],tag:a[5],lv:a[6],ex:a[7],co:parseCo(a[8]),cf:a[9]||"",src:"seed"}));
 const SEED_G = G.map((a,i)=>({id:"g"+(i+1),q:a[0],o:a[1],ex:a[2],pt:a[3],lv:a[4],src:"seed"}));
 const TOPICS = ["건기식 제품 개발","원료·규격·품질","기능성·임상 근거","인허가·표시 규정","OEM·위탁 제조","견적·발주","가격 협상","선적·물류","통관·서류","결제","품질·클레임","계약","이메일·회의","전시회·미팅","마케팅·영업"];
 const POS = {n:"명사",v:"동사",adj:"형용사",adv:"부사",phr:"표현",prep:"전치사"};
@@ -419,6 +542,7 @@ const LEVELS = [null,
   {name:"고급",desc:"법률 문구, 협상의 뉘앙스, 과학적 근거 표현",ai:"CEFR C1. Legal drafting language, subtle negotiation phrasing, scientific substantiation language. Sentences of 12 to 18 words."}];
 const MODES = {
   vocab:{name:"어휘",desc:"문장 속 빈칸에 알맞은 표현 쓰기"},
+  compose:{name:"영작",desc:"해석을 보고 단어를 골라 영어 문장 만들기"},
   listen:{name:"듣기",desc:"문장을 듣고 단어를 순서대로 맞추기"},
   speak:{name:"말하기",desc:"문장을 소리 내어 말하고 인식 결과 확인"},
   grammar:{name:"문법",desc:"무역 문장으로 푸는 4지선다"}
@@ -614,6 +738,18 @@ function newCard(){
     const dis=[];for(const o of others){if(dis.length<2&&!toks.some(t=>t.toLowerCase()===o)&&dis.indexOf(o)<0)dis.push(o)}
     c.bank=shuffle(toks.concat(dis)).map(t=>({t,used:false}));c.built=[];
   }
+  if(ss.mode==="compose"){
+    const lv=it.lv||curSel(),tk=t=>t.split(/\s+/).map(x=>x.replace(/[.,!?;:]/g,"")).filter(Boolean);
+    const tb=tk(c.p.before),ta=tk(c.p.answer),tf=tk(c.p.after);
+    const lowerFirst=a=>{if(a.length&&a[0]!=="I"&&!/^I'/.test(a[0]))a[0]=a[0].charAt(0).toLowerCase()+a[0].slice(1)};
+    lowerFirst(tb.length?tb:ta);
+    c.lv=lv;c.typedMode=lv>=4;c.keyTokens=ta;c.target=tb.concat(ta,tf);
+    const chips=c.typedMode?tb.concat(tf):c.target.slice();
+    const dis=distractors(c.target,it,lv<=2?0:lv===3?3:5,c.typedMode);
+    c.bank=shuffle(chips.concat(dis)).map(t=>({t,used:false}));
+    if(c.typedMode)c.bank.unshift({t:"",input:true,used:false});
+    c.built=[];c.inputVal="";
+  }
   if(ss.mode==="speak"){c.best=null;c.heard="";c.flags=null;c.state="idle";c.msg="";c.mask=false}
   if(ss.mode==="grammar"){c.opts=shuffle(it.o.map((t,i)=>({t,ok:i===0})));c.pick=-1}
   ss.card=c;
@@ -621,13 +757,39 @@ function newCard(){
 function announce(){const ss=S.session,c=ss&&ss.card;if(!c)return;
   if(ss.mode==="listen")say(c.full);
   else if(ss.mode==="vocab"&&c.phase==="intro"&&S.progress.settings.auto){const it=findItem("vocab",c.id);if(it)say(it.w)}}
+const PREPS=["in","on","at","by","for","to","with","of","from","into"];
+const AUXSWAP={is:"are",are:"is",was:"were",were:"was",has:"have",have:"has",will:"would",would:"will",can:"could",could:"can",do:"does",does:"do",a:"the",the:"a",this:"these",must:"should"};
+function verbForms(w){if(!/^[a-z]+$/.test(w))return[];
+  const s=/(ch|sh|s|x|z)$/.test(w)?w+"es":/[^aeiou]y$/.test(w)?w.slice(0,-1)+"ies":w+"s";
+  const ed=/e$/.test(w)?w+"d":/[^aeiou]y$/.test(w)?w.slice(0,-1)+"ied":w+"ed";
+  const ing=/[^e]e$/.test(w)?w.slice(0,-1)+"ing":w+"ing";return[s,ed,ing]}
+function distractors(target,it,n,typed){
+  if(!n)return[];const low=target.map(t=>t.toLowerCase()),smart=[],out=[];
+  const add=(arr,w)=>{w=String(w||"").toLowerCase();if(w&&low.indexOf(w)<0&&smart.indexOf(w)<0&&out.indexOf(w)<0)arr.push(w)};
+  if(low.some(t=>PREPS.indexOf(t)>=0))shuffle(PREPS).slice(0,3).forEach(w=>add(smart,w));
+  low.forEach(t=>{if(AUXSWAP[t])add(smart,AUXSWAP[t])});
+  if(!typed&&it.pos==="v"){const base=String(it.w).split(" ")[0].toLowerCase();[base].concat(verbForms(base)).forEach(w=>add(smart,w))}
+  shuffle(smart).slice(0,n).forEach(w=>out.push(w));
+  if(out.length<n){const words=[];shuffle(SEED_V.filter(x=>x.id!==it.id&&(!it.lv||x.lv===it.lv))).slice(0,8).forEach(x=>parseS(x.s).full.replace(/[.,!?;:]/g,"").split(/\s+/).forEach(w=>{if(/^[a-z]{3,}$/.test(w))words.push(w)}));
+    for(const w of shuffle(words)){if(out.length>=n)break;add(out,w)}}
+  return out.slice(0,n);
+}
+function builtTokens(c){const r=[];c.built.forEach(i=>{const b=c.bank[i];if(b.input)String(c.inputVal||"").trim().split(/\s+/).filter(Boolean).forEach(w=>r.push(w));else r.push(b.t)});return r}
+function review(c){
+  const mine=c.mine||[],nt=c.target.map(t=>norm(t)),nm=mine.map(t=>norm(t));
+  const fm=lcsFlags(nm,nt),ft=lcsFlags(nt,nm),hit=ft.filter(Boolean).length,missed=c.target.filter((t,i)=>!ft[i]);
+  if(c.res==="good")return `<p class="fb ok">${c.target.length}단어를 모두 정확한 순서로 맞혔습니다.</p>`;
+  return `<span class="lab" style="margin-top:14px">내 답</span><p class="en sm mine">${mine.length?mine.map((t,i)=>`<span class="${fm[i]?"hit":"miss"}">${esc(t)}</span>`).join(" "):'<span class="miss">(답하지 않음)</span>'}</p>
+    <p class="fb ${c.res==="hard"?"":"no"}">${c.res==="hard"?"어순은 맞았고 직접 입력한 표현의 철자가 조금 달랐습니다. ":""}정답 ${c.target.length}단어 중 ${hit}단어가 맞는 순서에 있습니다. 빨간색은 틀렸거나 순서가 다른 단어입니다.</p>
+    ${missed.length?`<p class="yours">빠졌거나 자리가 틀린 단어: <b class="need">${missed.map(esc).join(", ")}</b></p>`:""}`;
+}
 function finishCard(res){
   const ss=S.session,c=ss.card;c.phase="done";c.res=res;
   grade(ss.mode,c.id,res);
   if(!(c.id in ss.first))ss.first[c.id]=res;
   if(res==="again"&&!ss.retried[c.id]){ss.retried[c.id]=true;ss.queue.push(c.id)}
   render();
-  if(S.progress.settings.auto&&ss.mode==="vocab")say(c.full);
+  if(S.progress.settings.auto&&(ss.mode==="vocab"||ss.mode==="compose"))say(c.full);
 }
 function nextCard(){
   const ss=S.session;if(rec){try{rec.abort()}catch(e){}rec=null}
@@ -643,7 +805,7 @@ function render(){
   document.querySelectorAll("#nav button").forEach(b=>{if(b.dataset.nav===S.view)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
   app.innerHTML = S.view==="home"?vHome():S.view==="lib"?vLib():S.view==="stats"?vStats():S.view==="session"?vSession():S.view==="test"?vTest():vResult();
   if(S.view==="session"&&S.session.card&&S.session.card.phase==="ask"&&S.session.mode==="vocab"){const a=$("#ans");if(a){a.value=S.session.card.typed||"";try{a.focus({preventScroll:true})}catch(e){a.focus()}}}
-  if(S.view==="session"&&S.session.mode==="listen")drawChips();
+  if(S.view==="session"&&(S.session.mode==="listen"||S.session.mode==="compose"))drawChips();
 }
 function top(){const st=streak();return `<header class="top"><div class="brand">통과<small>무역 영어 훈련</small></div><div class="streak">${st?`연속 <b>${st}일</b>`:"오늘 첫 학습을 시작해 보세요"}</div></header>`}
 
@@ -688,6 +850,7 @@ function vSession(){
   const it=findItem(ss.mode,c.id);
   if(ss.mode==="vocab")return sbar()+vVocab(it,c);
   if(ss.mode==="listen")return sbar()+vListen(it,c);
+  if(ss.mode==="compose")return sbar()+vCompose(it,c);
   if(ss.mode==="speak")return sbar()+vSpeak(it,c);
   return sbar()+vGrammar(it,c);
 }
@@ -714,8 +877,8 @@ function vVocab(it,c){
 }
 function detail(it){
   const co=Array.isArray(it.co)?it.co.filter(x=>Array.isArray(x)&&x.length===2):[];
-  if(!it.ex&&!co.length&&!it.cf)return "";
-  return `<div class="detail">${it.ex?`<span class="lab">설명</span><p>${esc(it.ex)}</p>`:""}
+  if(!it.ex&&!co.length&&!it.cf&&!it.pn)return "";
+  return `<div class="detail">${it.pn?`<span class="lab">문장 구조</span><p>${esc(it.pn)}</p>`:""}${it.ex?`<span class="lab">설명</span><p>${esc(it.ex)}</p>`:""}
     ${co.length?`<span class="lab">자주 쓰는 조합</span><ul class="co">${co.map(x=>`<li><span>${esc(x[0])}</span>${esc(x[1])}</li>`).join("")}</ul>`:""}
     ${it.cf?`<span class="lab">비교·주의</span><p>${esc(it.cf)}</p>`:""}</div>`;
 }
@@ -724,17 +887,32 @@ function vListen(it,c){
   if(c.phase==="ask")return `<section class="sheet card"><div class="playrow"><button class="btn pri" data-act="play">듣기</button><button class="btn" data-act="slow">천천히 듣기</button></div>
     <div id="built" class="built" aria-label="내가 만든 문장"></div><div id="bank" class="bank" aria-label="단어 보기"></div></section>
     <div class="actions"><button class="btn" data-act="giveup">모르겠어요</button><button class="btn pri" data-act="check">확인</button></div>`;
-  const mine=c.built.map(i=>c.bank[i].t).join(" ");
   return `<section class="sheet card ${clsOf(c.res)}">${stampOf(c.res)}<span class="lab">정답</span>
-    <p class="en">${esc(c.full)}</p><p class="tr">${esc(it.tr)}</p>
-    ${c.res!=="good"&&mine?`<p class="yours">내 답: <s>${esc(mine)}</s></p>`:""}
-    <div class="detail"><span class="lab">핵심 표현</span><p><b class="kw">${esc(it.w)}</b> ${esc(it.m)}</p></div></section>
+    <p class="en">${esc(c.p.before)}<mark>${esc(c.p.answer)}</mark>${esc(c.p.after)}</p><p class="tr">${esc(it.tr)}</p>
+    ${review(c)}
+    <div class="detail"><span class="lab">핵심 표현</span><p><b class="kw">${esc(it.w)}</b> ${esc(it.m)}</p></div>${detail(it)}</section>
     <div class="actions"><button class="btn" data-act="play">다시 듣기</button><button class="btn pri" data-act="next">다음</button></div>`;
+}
+function vCompose(it,c){
+  if(c.phase==="ask")return `<section class="sheet card"><span class="lab">이 뜻이 되도록 영어 문장을 만드세요 (${c.lv}단계${c.lv>=3?", 쓰지 않는 단어 포함":""})</span>
+    <p class="tr big">${esc(it.tr)}</p>
+    ${c.typedMode?`<p class="note" style="margin:0 0 10px">'직접 입력' 칸을 알맞은 자리에 넣고 <b>${esc(it.m)}</b>에 해당하는 표현을 적으세요.</p>`:""}
+    <div id="built" class="built" aria-label="내가 만든 문장"></div><div id="bank" class="bank" aria-label="단어 보기"></div></section>
+    <div class="actions"><button class="btn" data-act="clearchips">지우기</button><button class="btn" data-act="giveup">모르겠어요</button><button class="btn pri" data-act="check">확인</button></div>`;
+  return `<section class="sheet card ${clsOf(c.res)}">${stampOf(c.res)}<span class="lab">정답</span>
+    <p class="en">${esc(c.p.before)}<mark>${esc(c.p.answer)}</mark>${esc(c.p.after)}</p><p class="tr">${esc(it.tr)}</p>
+    ${review(c)}
+    <div class="detail"><span class="lab">핵심 표현</span><p><b class="kw">${esc(it.w)}</b> ${esc(it.m)}</p></div>${detail(it)}</section>
+    <div class="actions">${TTS.ok?'<button class="btn" data-act="say">문장 듣기</button>':""}<button class="btn pri" data-act="next">다음</button></div>`;
 }
 function drawChips(){
   const c=S.session&&S.session.card;if(!c||c.phase!=="ask")return;const b=$("#built"),k=$("#bank");if(!b||!k)return;
-  b.innerHTML=c.built.map((bi,pos)=>`<button class="chip" data-act="unchip" data-pos="${pos}">${esc(c.bank[bi].t)}</button>`).join("");
-  k.innerHTML=c.bank.map((x,i)=>`<button class="chip ${x.used?"used":""}" data-act="chip" data-i="${i}" ${x.used?'tabindex="-1" aria-hidden="true"':""}>${esc(x.t)}</button>`).join("");
+  const had=document.activeElement&&document.activeElement.id==="cin";
+  b.innerHTML=c.built.map((bi,pos)=>c.bank[bi].input
+    ?`<span class="chip inchip"><input id="cin" aria-label="핵심 표현 직접 입력" style="width:${Math.max(8,c.keyTokens.join(" ").length+2)}ch" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"><button class="rm" data-act="unchip" data-pos="${pos}" aria-label="직접 입력 칸 빼기">×</button></span>`
+    :`<button class="chip" data-act="unchip" data-pos="${pos}">${esc(c.bank[bi].t)}</button>`).join("");
+  k.innerHTML=c.bank.map((x,i)=>`<button class="chip ${x.input?"inbank":""} ${x.used?"used":""}" data-act="chip" data-i="${i}" ${x.used?'tabindex="-1" aria-hidden="true"':""}>${x.input?"직접 입력":esc(x.t)}</button>`).join("");
+  const cin=$("#cin");if(cin){cin.value=c.inputVal||"";if(had||c.focusInput){c.focusInput=false;try{cin.focus({preventScroll:true})}catch(e){cin.focus()}}}
 }
 function vSpeak(it,c){
   const words=c.full.split(/\s+/);
@@ -853,7 +1031,7 @@ function vocabPrompt(topic,level,n,words){
   const have=allVocab().map(x=>x.w).slice(0,260).join(", ");
   return BASE+(words?`Make one card for EACH of these expressions, in this order (if a Korean meaning is given after '=', use it):\n${words.join("\n")}\n`
     :`Topic: ${topic}\nDifficulty: step ${level} of 5. ${LEVELS[level].ai}\nMake ${n} cards of expressions that are genuinely useful for this topic at exactly this difficulty. Do not use any of these already-known expressions: ${have}\n`)
-  +`Reply with only a JSON array. Each element: {"word": the expression in base form (one word or a short phrase of at most four words), "pos": one of "n","v","adj","adv","phr", "meaning": concise Korean meaning, "sentence": one English sentence in which the target expression appears exactly once, wrapped in curly braces in the exact form used, e.g. "We will {dispatch} the goods tomorrow.", "translation": Korean translation of the sentence, "explain": two or three Korean sentences on nuance, register and when it is used in real business, including word family or grammar pattern if useful, "collocations": array of two or three {"en": common English collocation, "ko": Korean meaning}, "similar": one Korean sentence contrasting it with a similar or easily confused word, or "" if none}`;
+  +`Reply with only a JSON array. Each element: {"word": the expression in base form (one word or a short phrase of at most four words), "pos": one of "n","v","adj","adv","phr", "meaning": concise Korean meaning, "sentence": one English sentence in which the target expression appears exactly once, wrapped in curly braces in the exact form used, e.g. "We will {dispatch} the goods tomorrow.", "translation": Korean translation of the sentence, "pattern": one or two Korean sentences explaining the structure and word order of the example sentence (the pattern a learner needs in order to build this sentence, e.g. which preposition follows, tense in the clause, order of objects), "explain": two or three Korean sentences on nuance, register and when it is used in real business, including word family or grammar pattern if useful, "collocations": array of two or three {"en": common English collocation, "ko": Korean meaning}, "similar": one Korean sentence contrasting it with a similar or easily confused word, or "" if none}`;
 }
 function grammarPrompt(topic,level,n){
   return BASE+`Topic: ${topic}\nDifficulty: step ${level} of 5. ${LEVELS[level].ai}\nMake ${n} four-option grammar questions built on realistic sentences for this topic. Each tests one grammar point Korean learners often get wrong (prepositions, tense, articles, countability, gerund vs infinitive, passive, conditionals, relative clauses, subject-verb agreement, word form). Exactly one option may be correct.\n`
@@ -883,7 +1061,7 @@ function cleanVocab(out){
     if(!w||!m||!tr)continue;if((s.match(/\{/g)||[]).length!==1)continue;const p=parseS(s);if(!p||!p.answer.trim()||p.answer.length>40)continue;
     if(have.has(norm(w)))continue;have.add(norm(w));
     const co=Array.isArray(x.collocations)?x.collocations.filter(k=>k&&k.en&&k.ko).slice(0,3).map(k=>[String(k.en).slice(0,60),String(k.ko).slice(0,60)]):[];
-    res.push({w,pos:POS[x.pos]?x.pos:"phr",m,s,tr,ex:String(x.explain||"").trim().slice(0,400),co,cf:String(x.similar||"").trim().slice(0,200),on:true});if(res.length>=20)break}
+    res.push({w,pos:POS[x.pos]?x.pos:"phr",m,s,tr,pn:String(x.pattern||"").trim().slice(0,300),ex:String(x.explain||"").trim().slice(0,400),co,cf:String(x.similar||"").trim().slice(0,200),on:true});if(res.length>=20)break}
   return res;
 }
 function cleanGrammar(out){
@@ -963,10 +1141,24 @@ function checkVocab(giveup){
   finishCard("again");
 }
 function checkListen(giveup){
-  const c=S.session.card;if(giveup)return finishCard("again");
+  const c=S.session.card;if(giveup){c.mine=builtTokens(c);return finishCard("again")}
   if(!c.built.length){toast("단어를 눌러 문장을 만들어 주세요");return}
-  const mine=c.built.map(i=>c.bank[i].t.toLowerCase()).join(" "),tg=c.target.map(t=>t.toLowerCase()).join(" ");
-  finishCard(mine===tg?"good":"again");
+  c.mine=builtTokens(c);
+  finishCard(norm(c.mine.join(" "))===norm(c.target.join(" "))?"good":"again");
+}
+function checkCompose(giveup){
+  const c=S.session.card;c.mine=builtTokens(c);
+  if(giveup)return finishCard("again");
+  if(!c.built.length){toast("단어를 눌러 문장을 만들어 주세요");return}
+  if(c.typedMode){const placed=c.built.some(i=>c.bank[i].input);
+    if(!placed){toast("'직접 입력' 칸을 알맞은 자리에 넣어 주세요");return}
+    if(!String(c.inputVal||"").trim()){toast("직접 입력 칸에 표현을 적어 주세요");const el=$("#cin");if(el)el.focus();return}}
+  const tg=norm(c.target.join(" "));
+  if(norm(c.mine.join(" "))===tg)return finishCard("good");
+  if(c.typedMode){const key=norm(c.keyTokens.join(" ")),typed=norm(c.inputVal);
+    const fixed=[];c.built.forEach(i=>{const b=c.bank[i];if(b.input)c.keyTokens.forEach(w=>fixed.push(w));else fixed.push(b.t)});
+    if(norm(fixed.join(" "))===tg&&key.length>=6&&lev(key,typed)<=1)return finishCard("hard")}
+  finishCard("again");
 }
 function startMic(){
   const c=S.session.card;if(!SRClass||c.state==="listening")return;
@@ -1017,9 +1209,10 @@ const ACT={
   play(){say(S.session.card.full)},
   slow(){say(S.session.card.full,.65)},
   hint(){const c=S.session.card;const len=c.p.answer.replace(/ /g,"").length;c.hint=Math.min(c.hint+1,Math.max(1,len-1));const h=$("#hint");h.hidden=false;h.textContent=hintText(c.p.answer,c.hint);const a=$("#ans");if(a)a.focus()},
-  giveup(){S.session.mode==="vocab"?checkVocab(true):checkListen(true)},
-  check(){S.session.mode==="vocab"?checkVocab(false):checkListen(false)},
-  chip(b){const c=S.session.card,i=+b.dataset.i;if(c.bank[i].used)return;c.bank[i].used=true;c.built.push(i);drawChips()},
+  giveup(){const m=S.session.mode;m==="vocab"?checkVocab(true):m==="compose"?checkCompose(true):checkListen(true)},
+  check(){const m=S.session.mode;m==="vocab"?checkVocab(false):m==="compose"?checkCompose(false):checkListen(false)},
+  clearchips(){const c=S.session.card;c.built=[];c.bank.forEach(b=>b.used=false);drawChips()},
+  chip(b){const c=S.session.card,i=+b.dataset.i;if(c.bank[i].used)return;c.bank[i].used=true;c.built.push(i);if(c.bank[i].input)c.focusInput=true;drawChips()},
   unchip(b){const c=S.session.card,pos=+b.dataset.pos,i=c.built[pos];c.built.splice(pos,1);c.bank[i].used=false;drawChips()},
   opt(b){const c=S.session.card;c.pick=+b.dataset.i;finishCard(c.opts[c.pick].ok?"good":"again")},
   mic(){startMic()},
@@ -1038,7 +1231,7 @@ const ACT={
   stopgen(){if(AI.ctl)AI.ctl.abort()},
   discard(){S.lib.preview=null;render()},
   savepv(){const P=S.lib.preview,pick=P.items.filter(x=>x.on);if(!pick.length){toast("저장할 항목을 선택해 주세요");return}
-    if(P.kind==="vocab"){const room=MAX_VOCAB-S.cards.vocab.length;pick.slice(0,room).forEach(x=>S.cards.vocab.unshift({id:newId("u"),w:x.w,pos:x.pos,m:x.m,s:x.s,tr:x.tr,ex:x.ex||"",co:x.co||[],cf:x.cf||"",lv:P.lv||0,tag:P.tag||"내 표현",src:"user"}))}
+    if(P.kind==="vocab"){const room=MAX_VOCAB-S.cards.vocab.length;pick.slice(0,room).forEach(x=>S.cards.vocab.unshift({id:newId("u"),w:x.w,pos:x.pos,m:x.m,s:x.s,tr:x.tr,pn:x.pn||"",ex:x.ex||"",co:x.co||[],cf:x.cf||"",lv:P.lv||0,tag:P.tag||"내 표현",src:"user"}))}
     else{const room=MAX_GRAMMAR-S.cards.grammar.length;pick.slice(0,room).forEach(x=>S.cards.grammar.unshift({id:newId("h"),q:x.q,o:x.o,ex:x.ex,pt:x.pt,src:"user"}))}
     save("cards");S.lib.preview=null;S.lib.tab=P.kind==="vocab"?"list":S.lib.tab;render();toast(`${pick.length}개를 단어장에 저장했습니다`)},
   addmanual(){const w=$("#m-w").value.trim(),m=$("#m-m").value.trim(),s=$("#m-s").value.trim(),t=$("#m-t").value.trim(),er=$("#m-err");
@@ -1049,7 +1242,7 @@ const ACT={
     const sent=s.slice(0,idx)+"{"+s.slice(idx,idx+w.length)+"}"+s.slice(idx+w.length);
     S.cards.vocab.unshift({id:newId("u"),w:w.slice(0,60),pos:"phr",m:m.slice(0,80),s:sent.slice(0,240),tr:t.slice(0,240),tag:"내 표현",src:"user"});
     save("cards");S.lib.tab="list";render();toast("단어장에 저장했습니다")},
-  delcard(b){const id=b.dataset.id;S.cards.vocab=S.cards.vocab.filter(x=>x.id!==id);["vocab","listen","speak"].forEach(m=>delete S.progress.items[m+"|"+id]);save("cards");save("progress");
+  delcard(b){const id=b.dataset.id;S.cards.vocab=S.cards.vocab.filter(x=>x.id!==id);["vocab","compose","listen","speak"].forEach(m=>delete S.progress.items[m+"|"+id]);save("cards");save("progress");
     const q=$("#q");$("#wl").innerHTML=listRows(q?q.value:"")},
   delgrammar(){S.cards.grammar.forEach(x=>delete S.progress.items["grammar|"+x.id]);S.cards.grammar=[];save("cards");save("progress");render();toast("추가한 문법 문항을 삭제했습니다")},
   reset(){if(!S.resetArm){S.resetArm=true;render();setTimeout(()=>{if(S.resetArm){S.resetArm=false;if(S.view==="stats")render()}},4000);return}
@@ -1067,11 +1260,13 @@ document.addEventListener("change",e=>{
 document.addEventListener("input",e=>{
   if(e.target.id==="q"){$("#wl").innerHTML=listRows(e.target.value)}
   if(e.target.id==="ans"&&S.session&&S.session.card)S.session.card.typed=e.target.value;
+  if(e.target.id==="cin"&&S.session&&S.session.card)S.session.card.inputVal=e.target.value;
 });
 document.addEventListener("keydown",e=>{
   if(e.key!=="Enter"||e.isComposing||S.view!=="session"||!S.session.card)return;
   const c=S.session.card;
   if(c.phase==="ask"&&S.session.mode==="vocab"&&e.target.id==="ans"){e.preventDefault();checkVocab(false)}
+  else if(c.phase==="ask"&&S.session.mode==="compose"&&e.target.id==="cin"){e.preventDefault();e.target.blur()}
   else if(c.phase==="done"&&e.target.tagName!=="BUTTON"){e.preventDefault();nextCard()}
 });
 

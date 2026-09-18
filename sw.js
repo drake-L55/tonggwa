@@ -1,5 +1,5 @@
 /* 통과 — 오프라인 캐시. index.html을 고쳐 올린 뒤에는 VERSION 숫자를 올려 주세요. */
-const VERSION = "tonggwa-v3";
+const VERSION = "tonggwa-v4";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-180.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
